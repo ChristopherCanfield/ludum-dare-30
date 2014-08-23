@@ -12,6 +12,9 @@ package com.divergentthoughtsgames.assets
 		[Embed(source = '../../../../res/art/side-scroller-level-1/stick-man.png')]
 		public const StickMan: Class;
 		
+		[Embed(source = '../../../../res/art/toast-man.png')]
+		public const ToastMan: Class;
+		
 		[Embed(source = '../../../../res/art/text-box.png')]
 		public const TextBox: Class;
 		

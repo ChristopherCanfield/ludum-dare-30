@@ -73,6 +73,8 @@ package com.divergentthoughtsgames.topdown {
 		private var previouslyLoaded: Boolean = false;
 		
 		private var usableManager: UsableManager;
+		
+		private var currentDialog: Dialog;
  
         override public function create():void
         {
@@ -89,6 +91,9 @@ package com.divergentthoughtsgames.topdown {
 				add(player);
 				
 				addUsables();
+				
+				// For testing.
+				showDialog(Assets.graphics.Quest1Dialog1);
 			}
 			
 			FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
@@ -125,22 +130,12 @@ package com.divergentthoughtsgames.topdown {
 			livesText.shadow = 0xff000000;
 			livesText.antialiasing = true;
 			add(livesText);
+			
+			// TODO: For testing - move to the correct area later.
+			var toastMan: FlxSprite = new FlxSprite(200, 1500, Assets.graphics.ToastMan);
+			add(toastMan);
 				
 			add(new SoundManager(player, level));
-			
-			var dialogBox: FlxSprite = new FlxSprite(300, 0, Assets.graphics.TextBox);
-			dialogBox.scrollFactor.x = dialogBox.scrollFactor.y = 0;
-			dialogBox.x = FlxG.width / 2 - dialogBox.width / 2;
-			dialogBox.y = 100;
-			add(dialogBox);
-			
-			var dialogText: FlxSprite = new FlxSprite(0, 0, Assets.graphics.Quest1Dialog1);
-			dialogText.scrollFactor.x = dialogText.scrollFactor.y = 0;
-			dialogText.x = FlxG.width / 2 - dialogText.width / 2;
-			dialogText.y = 100;
-			add(dialogText);
-			
-			
 			
 			//FlxG.camera.flash(0xffffffff, 1.5);
 			
@@ -150,6 +145,14 @@ package com.divergentthoughtsgames.topdown {
 			
 			previouslyLoaded = true;
         }
+		
+		public function showDialog(dialogTextClass: Class): void
+		{
+			var dialogBox: Dialog = new Dialog(this, dialogTextClass);
+			dialogBox.setPosition(FlxG.width / 2 - dialogBox.width / 2, 100);
+			add(dialogBox);
+			currentDialog = dialogBox;
+		}
 		
 		public function removeInstructions(): void
 		{
@@ -226,6 +229,12 @@ package com.divergentthoughtsgames.topdown {
 			if (FlxG.keys.ESCAPE && FlxG.debug)
 			{
 				FlxG.switchState(App.gameStates[SideScrollerState.NAME]);
+			}
+			
+			if (FlxG.keys.E && currentDialog != null)
+			{
+				currentDialog.destroy();
+				remove(currentDialog);
 			}
 		}
 		
