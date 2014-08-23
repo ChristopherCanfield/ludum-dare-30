@@ -1,4 +1,4 @@
-package com.divergentthoughtsgames 
+package com.divergentthoughtsgames.sidescroller 
 {
 	import flash.geom.Point;
 	

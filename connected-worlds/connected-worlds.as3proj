@@ -4,12 +4,12 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\top-down.swf" />
+    <movie path="bin\connected-worlds-ld30.swf" />
     <movie fps="60" />
-    <movie width="960" />
-    <movie height="720" />
-    <movie version="10" />
-    <movie minorVersion="0" />
+    <movie width="900" />
+    <movie height="656" />
+    <movie version="11" />
+    <movie minorVersion="8" />
     <movie platform="Flash Player" />
     <movie background="#000000" />
   </output>

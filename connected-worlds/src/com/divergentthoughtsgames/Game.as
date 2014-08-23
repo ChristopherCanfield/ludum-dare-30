@@ -2,7 +2,7 @@ package com.divergentthoughtsgames
 {
 	import org.flixel.FlxGame;
 	
-	import com.divergentthoughtsgames.gamestate.MenuState;
+	import com.divergentthoughtsgames.MenuState;
 	
 	/**
 	 * ...
@@ -13,7 +13,7 @@ package com.divergentthoughtsgames
 		
 		public function Game()
         {
-            super(960, 720, MenuState, 1.25);
+            super(900, 656, MenuState, 1);
         }
 	}
 }

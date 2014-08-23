@@ -1,4 +1,4 @@
-package com.divergentthoughtsgames {
+package com.divergentthoughtsgames.sidescroller {
 	
 	import org.flixel.FlxSprite;
 	
@@ -21,7 +21,7 @@ package com.divergentthoughtsgames {
 			super(x, y);
 		}
 		
-		final public function hit(player: Player): void
+		final public function hit(player: PlayerSideScroller): void
 		{
 			player.health -= damage;
 			kill();

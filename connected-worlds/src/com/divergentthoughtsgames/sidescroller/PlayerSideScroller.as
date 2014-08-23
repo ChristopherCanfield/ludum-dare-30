@@ -1,6 +1,5 @@
 package com.divergentthoughtsgames.sidescroller 
 {
-	import com.divergentthoughtsgames.gamestate.PlayState;
 	import flash.geom.Rectangle;
 	
 	import org.flixel.FlxGroup;
@@ -18,13 +17,12 @@ package com.divergentthoughtsgames.sidescroller
 	import org.flixel.plugin.photonstorm.FlxWeapon;
 	
 	import com.divergentthoughtsgames.assets.Assets;
-	import com.divergentthoughtsgames.util.MathUtils;
 	
 	/**
 	 * The player.
 	 * @author Christopher D. Canfield
 	 */
-	public class Player extends FlxSprite
+	public class PlayerSideScroller extends FlxSprite
 	{		
 		public static const HEIGHT: uint = 207;
 		public static const FRAME_WIDTH: uint = 145;
@@ -51,7 +49,7 @@ package com.divergentthoughtsgames.sidescroller
 		// The y position at the time of the player's jump.
 		private var yAtJump: Number;
 		
-		private var gameState: PlayState;
+		private var gameState: SideScrollerState;
 		
 		private var healthBar:FlxBar;
 		
@@ -61,7 +59,7 @@ package com.divergentthoughtsgames.sidescroller
 		
 		private var punch: Attack;
 		
-		public function Player(gameState: PlayState, attackGroup: FlxGroup, startX: int, startY: int,
+		public function PlayerSideScroller(gameState: SideScrollerState, attackGroup: FlxGroup, startX: int, startY: int,
 				floorArea: FlxRect, playerNumber: int) 
 		{
 			this.startX = startX;

@@ -1,8 +1,11 @@
-package com.divergentthoughtsgames.gamestate {
+package com.divergentthoughtsgames {
 	import org.flixel.FlxState;
 	import org.flixel.FlxButton;
 	import org.flixel.FlxG;
 	import org.flixel.FlxText;
+	
+	import com.divergentthoughtsgames.App;
+	import com.divergentthoughtsgames.topdown.TopDownState;
 	
 	/**
 	 * ...
@@ -10,6 +13,8 @@ package com.divergentthoughtsgames.gamestate {
 	 */
 	public class LoseMenuState extends FlxState
 	{
+		public static const NAME: String = "LoseMenuState";
+		
 		private var startButton:FlxButton;
  
         public function LoseMenuState()
@@ -33,7 +38,7 @@ package com.divergentthoughtsgames.gamestate {
         private function startGame():void
         {
             FlxG.mouse.hide();
-            FlxG.switchState(new TopDownState);
+            FlxG.switchState(App.gameStates[TopDownState.NAME]);
         }
 	}
 }

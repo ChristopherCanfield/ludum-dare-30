@@ -11,5 +11,8 @@ package com.divergentthoughtsgames.assets
 		
 		[Embed(source = '../../../../res/art/pacman-ghost.png')]
 		public const Ghost:Class;
+		
+		[Embed(source = '../../../../res/art/side-scroller-level-1/stick-man.png')]
+		public const StickMan: Class;
 	}
 }

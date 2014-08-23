@@ -258,6 +258,8 @@ package org.flixel
 		 */
 		protected var _pathRotate:Boolean;
 		
+		public var userData: Object;
+		
 		/**
 		 * Instantiates a <code>FlxObject</code>.
 		 * 

@@ -1,4 +1,4 @@
-package com.divergentthoughtsgames.gamestate {
+package com.divergentthoughtsgames.topdown {
 	
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -30,7 +30,8 @@ package com.divergentthoughtsgames.gamestate {
 	import com.divergentthoughtsgames.assets.Assets;
 	import com.divergentthoughtsgames.VariableEditorWindow;
 	import com.divergentthoughtsgames.topdown.PlayerTopDown;
-	import com.divergentthoughtsgames.Ghost;
+	import com.divergentthoughtsgames.*;
+	import com.divergentthoughtsgames.sidescroller.SideScrollerState;
 	import com.divergentthoughtsgames.audio.SoundManager;
 	
 	/**
@@ -39,6 +40,8 @@ package com.divergentthoughtsgames.gamestate {
 	 */
 	public class TopDownState extends FlxState
 	{
+		public static const NAME: String = "TopDownState";
+		
 		// The level's map.
 		private var level:FlxTilemap;
 		
@@ -118,7 +121,7 @@ package com.divergentthoughtsgames.gamestate {
 			minimapBorder.scrollFactor.x = minimapBorder.scrollFactor.y = 0;
 			add(minimapBorder);
 			
-			FlxG.camera.flash(0xffffffff, 1.5);
+			//FlxG.camera.flash(0xffffffff, 1.5);
 			
 			// Add the variable editor window. Remove this for release builds.
 			var variableEditorWindow:VariableEditorWindow = new VariableEditorWindow();
@@ -175,6 +178,16 @@ package com.divergentthoughtsgames.gamestate {
 			}
 			
 			livesText.text = "Lives: " + player.getLives();
+			
+			// Debugging: Switch between states.
+			if (FlxG.keys.ESCAPE && FlxG.debug)
+			{
+				FlxG.switchState(App.gameStates[SideScrollerState.NAME]);
+			}
+		}
+		
+		public override function destroy(): void
+		{
 		}
 		
 		private function onGameOver() : void

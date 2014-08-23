@@ -10,8 +10,10 @@ package com.divergentthoughtsgames.topdown {
 	import org.flixel.plugin.photonstorm.FlxWeapon;
 	import org.flixel.plugin.photonstorm.FlxMath;
 	
-	import com.divergentthoughtsgames.gamestate.TopDownState;
+	import com.divergentthoughtsgames.topdown.TopDownState;
 	import com.divergentthoughtsgames.assets.Assets;
+	import com.divergentthoughtsgames.App;
+	import com.divergentthoughtsgames.sidescroller.SideScrollerState;
 	
 	/**
 	 * The player.

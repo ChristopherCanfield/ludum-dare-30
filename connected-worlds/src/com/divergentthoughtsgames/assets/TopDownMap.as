@@ -4,7 +4,7 @@ package com.divergentthoughtsgames.assets
 	 * ...
 	 * @author Christopher D. Canfield
 	 */
-	public class Level 
+	public class TopDownMap 
 	{
 		[Embed(source = '../../../../res/map/warcraft-map.tmx', 
 				mimeType="application/octet-stream")] 

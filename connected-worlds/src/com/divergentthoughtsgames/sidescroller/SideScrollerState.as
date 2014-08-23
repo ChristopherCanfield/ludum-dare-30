@@ -1,6 +1,6 @@
-package com.divergentthoughtsgames.gamestate {
+package com.divergentthoughtsgames.sidescroller {
 	
-	import com.divergentthoughtsgames.level.Level;
+	import com.divergentthoughtsgames.assets.TopDownMap;
 	import exalted.input.XboxController;
 	import exalted.input.XboxInput;
 	import flash.geom.Rectangle;
@@ -25,16 +25,19 @@ package com.divergentthoughtsgames.gamestate {
 	import com.bit101.utils.MinimalConfigurator;
 	import com.bit101.components.Component;
 	
-	import com.divergentthoughtsgames.assets.Assets;
-	import com.divergentthoughtsgames.level.Level1;
 	import com.divergentthoughtsgames.*;
+	import com.divergentthoughtsgames.assets.*;
+	import com.divergentthoughtsgames.topdown.TopDownState;
+	
 	
 	/**
 	 * ...
 	 * @author Christopher D. Canfield
 	 */
-	public class TopDownState extends FlxState
+	public class SideScrollerState extends FlxState
 	{
+		public static const NAME: String = "SideScrollerState";
+		
 		private var levelCollisions: FlxGroup;
 		private var floorBounds: FlxRect;
 		
@@ -42,8 +45,7 @@ package com.divergentthoughtsgames.gamestate {
 		public var floorBottom: FlxObject;
 		
 		// The players.
-		private var player1: Player;
-		private var player2: Player;
+		private var player1: PlayerSideScroller;
 		private var players: FlxGroup;
 		
 		private var attackGroup: FlxGroup;
@@ -71,12 +73,12 @@ package com.divergentthoughtsgames.gamestate {
 			attackGroup = new FlxGroup();
 			
 			// Load map.
-			var level1: Level = new Level1();
+			var level1: SideScrollerLevel = new SideScrollerLevel1();
 			FlxG.worldBounds = level1.addBackgroundLayers(this);
 			floorBounds = level1.addPlayLayer(this);
 			setMapBoundaries();
 			
-			addPlayers();
+			addPlayer();
 			
 			level1.addForegroundLayer(this);
 			
@@ -116,7 +118,7 @@ package com.divergentthoughtsgames.gamestate {
 			levelCollisions = new FlxGroup(3);
 			add(levelCollisions);
 			
-			floorTop = new FlxObject(0, floorBounds.top - (Player.HEIGHT * Player.MIN_SCALE_FACTOR), 
+			floorTop = new FlxObject(0, floorBounds.top - (PlayerSideScroller.HEIGHT * PlayerSideScroller.MIN_SCALE_FACTOR), 
 					FlxG.worldBounds.width, 10);
 			floorTop.moves = false;
 			floorTop.immovable = true;
@@ -141,18 +143,13 @@ package com.divergentthoughtsgames.gamestate {
 			levelCollisions.add(rightWall);
 		}
 		
-		private function addPlayers(): void
+		private function addPlayer(): void
 		{
 			var startX: int = 30;
-			var startY: int = 545 - Player.HEIGHT;
-			player1 = new Player(this, attackGroup, startX, startY, floorBounds, 1);
+			var startY: int = 545 - PlayerSideScroller.HEIGHT;
+			player1 = new PlayerSideScroller(this, attackGroup, startX, startY, floorBounds, 1);
 			players.add(player1);
 			add(player1);
-			
-			//startX = FlxG.width - 30 - Player.WIDTH;
-			//player2 = new Player(this, attackGroup, startX, startY, 2);
-			//players.add(player2);
-			//add(player2);
 		}
 		
 		override public function update(): void
@@ -187,20 +184,30 @@ package com.divergentthoughtsgames.gamestate {
 			timeRemainingText.text = "Time: " + Math.round(timeRemaining);
 			
 			//livesText.text = "Lives: " + player.getLives();
+			
+			// Debugging: Switch between states.
+			if (FlxG.keys.ESCAPE && FlxG.debug)
+			{
+				FlxG.switchState(App.gameStates[TopDownState.NAME]);
+			}
 		}
 		
 		private function onGameOver(): void
 		{
 			FlxG.mouse.show();
-            FlxG.switchState(new LoseMenuState());
+            FlxG.switchState(App.gameStates[LoseMenuState.NAME]);
 		}
 		
-		private function onAttackHit(player: Player, attack: AttackProjectile): void
+		private function onAttackHit(player: PlayerSideScroller, attack: AttackProjectile): void
 		{
 			if (player != attack.parent)
 			{
 				attack.hit(player);
 			}
+		}
+		
+		public override function destroy(): void
+		{
 		}
 	}
 }

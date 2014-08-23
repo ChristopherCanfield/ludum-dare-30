@@ -48,6 +48,11 @@ package org.flixel
 		public var ignoreDrawDebug:Boolean;
 		
 		/**
+		 * Called by update.
+		 */
+		public var onUpdate: Function = null;
+		
+		/**
 		 * Instantiate the basic flixel object.
 		 */
 		public function FlxBasic()
@@ -81,6 +86,10 @@ package org.flixel
 		 */
 		public function update():void
 		{
+			if (onUpdate != null)
+			{
+				onUpdate.call();
+			}
 		}
 		
 		/**
