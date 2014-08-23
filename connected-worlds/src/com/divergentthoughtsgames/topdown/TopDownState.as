@@ -66,27 +66,35 @@ package com.divergentthoughtsgames.topdown {
 		private var gameOver:Boolean = false;
 		
 		private var debugConfig:MinimalConfigurator;
+		
+		private var previouslyLoaded: Boolean = false;
  
         override public function create():void
         {
             FlxG.bgColor = 0xffaaaaaa;
 			
-			loadMap();
+			if (!previouslyLoaded)
+			{
+				loadMap();
 			
-			//Create player (a red box)
-			var startX:int = 114;
-			var startY:int = 2316;
+				var startX:int = 114;
+				var startY:int = 2316;
+				
+				player = new PlayerTopDown(this, level, startX, startY);
+				add(player);
+			}
 			
-			// Add a play instructions.
-			//instructionsText = new FlxText(startX - 150, startY - 300, 300);
-			//instructionsText.size = 15;
-			//instructionsText.text = "WASD or Arrow Keys to move Mouse click or spacebar to shoot";
-			//instructionsText.shadow = 0xff000000;
-			//add(instructionsText);
-			
-			player = new PlayerTopDown(this, level, startX, startY);
 			FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
-			add(player);
+			FlxG.camera.bounds = new FlxRect(0, 0, level.width, level.height);
+			
+			addMinimap();
+			
+							// Add a play instructions.
+				//instructionsText = new FlxText(startX - 150, startY - 300, 300);
+				//instructionsText.size = 15;
+				//instructionsText.text = "WASD or Arrow Keys to move Mouse click or spacebar to shoot";
+				//instructionsText.shadow = 0xff000000;
+				//add(instructionsText);
 			
 			//ghosts = new FlxGroup(3);
 			//ghosts.add(new Ghost(this, level, startX - 100, startY - 100, player));
@@ -108,24 +116,16 @@ package com.divergentthoughtsgames.topdown {
 			livesText.shadow = 0xff000000;
 			livesText.antialiasing = true;
 			add(livesText);
-			
+				
 			add(new SoundManager(player, level));
-			
-			var minimap: FlxCamera = new FlxCamera(0, 0, level.width / 2, level.height / 2, 0.125);
-			minimap.follow(player, FlxCamera.STYLE_LOCKON);
-			minimap.bounds = new FlxRect(0, 0, level.width, level.height);
-			FlxG.addCamera(minimap);
-			
-			var minimapBorder: FlxSprite = new FlxSprite();
-			minimapBorder.makeGraphic(122, 122, 0xff000000);
-			minimapBorder.scrollFactor.x = minimapBorder.scrollFactor.y = 0;
-			add(minimapBorder);
 			
 			//FlxG.camera.flash(0xffffffff, 1.5);
 			
 			// Add the variable editor window. Remove this for release builds.
 			var variableEditorWindow:VariableEditorWindow = new VariableEditorWindow();
 			debugConfig = variableEditorWindow.create(player);
+			
+			previouslyLoaded = true;
         }
 		
 		public function removeInstructions(): void
@@ -137,7 +137,20 @@ package com.divergentthoughtsgames.topdown {
 			}
 		}
 		
-		private function loadMap() : void 
+		private function addMinimap(): void
+		{
+			var minimap: FlxCamera = new FlxCamera(0, 0, level.width / 2, level.height / 2, 0.125);
+			minimap.follow(player, FlxCamera.STYLE_LOCKON);
+			minimap.bounds = new FlxRect(0, 0, level.width, level.height);
+			FlxG.addCamera(minimap);
+			
+			var minimapBorder: FlxSprite = new FlxSprite();
+			minimapBorder.makeGraphic(151, 151, 0xff000000);
+			minimapBorder.scrollFactor.x = minimapBorder.scrollFactor.y = 0;
+			add(minimapBorder);
+		}
+		
+		private function loadMap(): void 
 		{
 			var xml:XML = new XML(new Assets.level.Level1Xml());
 			var tmx:TmxMap = new TmxMap(xml);
