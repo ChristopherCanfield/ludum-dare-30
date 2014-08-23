@@ -62,6 +62,9 @@ package com.divergentthoughtsgames.sidescroller {
 		private var debugConfig:MinimalConfigurator;
 		
 		private static var gamepad: XboxController;
+		
+		private var boss: FlxSprite;
+		private var enemies: FlxGroup;
  
         override public function create():void
         {
@@ -79,6 +82,14 @@ package com.divergentthoughtsgames.sidescroller {
 			setMapBoundaries();
 			
 			addPlayer();
+			
+			boss = new FlxSprite(1000, FlxG.height - 175);
+			boss.loadGraphic(Assets.graphics.BizzaroWorldBoss, true, true, 402, 175);
+			boss.addAnimation("move", [0, 1], 10, true);
+			boss.play("move");
+			
+			var penguin: FlxSprite = new FlxSprite(1500, FlxG.height - 300, Assets.graphics.Penguin);
+			add(penguin);
 			
 			level1.addForegroundLayer(this);
 			
@@ -100,10 +111,14 @@ package com.divergentthoughtsgames.sidescroller {
 			//add(livesText);
 			
 			// Add a play instructions.
-			var instructionsText:FlxText = new FlxText(FlxG.width / 2 - 50, 25, 100);
+			var instructionsText:FlxText = new FlxText(FlxG.width / 2 - 50, 25, 200);
 			instructionsText.text = "WASD or Arrow Keys to move";
 			instructionsText.shadow = 0xff000000;
 			add(instructionsText);
+			
+			enemies = new FlxGroup();
+			enemies.add(boss);
+			add(enemies);
 			
 			//FlxG.playMusic(Assets.audio.MusicTrack1, 0.8);
 			
@@ -171,17 +186,18 @@ package com.divergentthoughtsgames.sidescroller {
 			//}
 			
 			// Process collisions.
-			//FlxG.collide(player1, player2);
 			FlxG.collide(levelCollisions, players);
 			FlxG.overlap(players, attackGroup, onAttackHit);
-			//FlxG.collide(levelCollisions, player2.particleGroup);
 			FlxG.collide(levelCollisions, player1.particleGroup);
 			FlxG.collide(player1, player1.jumpFloor, player1.onJumpComplete);
+			FlxG.collide(player1, enemies);
 			
 			super.update();
 			
 			timeRemaining -= FlxG.elapsed;
 			timeRemainingText.text = "Time: " + Math.round(timeRemaining);
+			
+			boss.x -= 0.5;
 			
 			//livesText.text = "Lives: " + player.getLives();
 			

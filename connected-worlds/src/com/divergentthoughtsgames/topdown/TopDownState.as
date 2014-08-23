@@ -130,10 +130,6 @@ package com.divergentthoughtsgames.topdown {
 			livesText.shadow = 0xff000000;
 			livesText.antialiasing = true;
 			add(livesText);
-			
-			// TODO: For testing - move to the correct area later.
-			var toastMan: FlxSprite = new FlxSprite(200, 1500, Assets.graphics.ToastMan);
-			add(toastMan);
 				
 			add(new SoundManager(player, level));
 			
@@ -189,6 +185,13 @@ package com.divergentthoughtsgames.topdown {
 			
 			var scaleX:Number = FlxG.camera.getScale().x;
 			var scaleY:Number = FlxG.camera.getScale().y;
+			
+			// TODO: For testing - move to the correct area later.
+			var toastMan: FlxSprite = new FlxSprite(200, 1650, Assets.graphics.ToastMan);
+			add(toastMan);
+			
+			var town1: FlxSprite = new FlxSprite(200, 1800, Assets.graphics.Town1);
+			add(town1);
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}
