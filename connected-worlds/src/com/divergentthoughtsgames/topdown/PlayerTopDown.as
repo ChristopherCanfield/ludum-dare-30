@@ -60,21 +60,21 @@ package com.divergentthoughtsgames.topdown {
 				resetAtStartPosition();
 			}
 			
-			processUserInput();
-			stayWithinBounds(minX, minY, maxX, maxY);
-		}
-		
-		private function processUserInput():void
-		{
-			acceleration.x = 0;
-			acceleration.y = 0;
-			
 			var minX:Number = 0;
 			var minY:Number = 0;
 			var maxX:Number = level.width - frameWidth;
 			var maxY:Number = level.height - frameHeight;
 			
-			var speedModifier = (FlxG.keys.SHIFT) ? 8 : 4;
+			processUserInput(minX, minY, maxX, maxY);
+			stayWithinBounds(minX, minY, maxX, maxY);
+		}
+		
+		private function processUserInput(minX: Number, minY: Number, maxX: Number, maxY: Number): void
+		{
+			acceleration.x = 0;
+			acceleration.y = 0;
+			
+			var speedModifier: int = (FlxG.keys.SHIFT) ? 8 : 4;
 			
 			if ((FlxG.keys.LEFT || FlxG.keys.A) && (x > minX))
 			{
