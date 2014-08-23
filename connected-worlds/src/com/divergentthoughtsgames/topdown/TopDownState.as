@@ -1,7 +1,10 @@
 package com.divergentthoughtsgames.topdown {
 	
+	import com.divergentthoughtsgames.assets.SideScrollerLevel1;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 	
 	import org.flixel.FlxGroup;
@@ -68,6 +71,8 @@ package com.divergentthoughtsgames.topdown {
 		private var debugConfig:MinimalConfigurator;
 		
 		private var previouslyLoaded: Boolean = false;
+		
+		private var usableManager: UsableManager;
  
         override public function create():void
         {
@@ -82,10 +87,14 @@ package com.divergentthoughtsgames.topdown {
 				
 				player = new PlayerTopDown(this, level, startX, startY);
 				add(player);
+				
+				addUsables();
 			}
 			
 			FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
-			FlxG.camera.bounds = new FlxRect(0, 0, level.width, level.height);
+			FlxG.camera.setBounds(0, 0, level.width, level.height);
+			FlxG.worldBounds = level.getBounds();
+			FlxG.worldBounds.width = level.width + 32;
 			
 			addMinimap();
 			
@@ -118,6 +127,20 @@ package com.divergentthoughtsgames.topdown {
 			add(livesText);
 				
 			add(new SoundManager(player, level));
+			
+			var dialogBox: FlxSprite = new FlxSprite(300, 0, Assets.graphics.TextBox);
+			dialogBox.scrollFactor.x = dialogBox.scrollFactor.y = 0;
+			dialogBox.x = FlxG.width / 2 - dialogBox.width / 2;
+			dialogBox.y = 100;
+			add(dialogBox);
+			
+			var dialogText: FlxSprite = new FlxSprite(0, 0, Assets.graphics.Quest1Dialog1);
+			dialogText.scrollFactor.x = dialogText.scrollFactor.y = 0;
+			dialogText.x = FlxG.width / 2 - dialogText.width / 2;
+			dialogText.y = 100;
+			add(dialogText);
+			
+			
 			
 			//FlxG.camera.flash(0xffffffff, 1.5);
 			
@@ -158,15 +181,22 @@ package com.divergentthoughtsgames.topdown {
 			var tileset:TmxTileSet = tmx.getTileSet('warcraft-tileset-2');
 			var mapCsv:String = tmx.getLayer('map').toCsv(tileset);
 			level = new FlxTilemap();
-			level.loadMap(mapCsv, Assets.level.Level1Image, 32, 32, FlxTilemap.OFF, 0, 0, 196);
+			level.loadMap(mapCsv, Assets.level.Level1Image, 32, 32, FlxTilemap.OFF, 0, 0, 155); // Formerly 196
 			add(level);
 			
 			var scaleX:Number = FlxG.camera.getScale().x;
 			var scaleY:Number = FlxG.camera.getScale().y;
 			
-			FlxG.worldBounds = level.getBounds();
-			FlxG.worldBounds.width = level.width + 32;
-			FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
+			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
+		}
+		
+		private function addUsables(): void
+		{
+			usableManager = new UsableManager(player);
+			add(usableManager);
+			
+			var cave: StateSwitchTrigger = new StateSwitchTrigger("Cave", new Rectangle(0, 2252, 110, 140), new SideScrollerState());
+			usableManager.add(cave);
 		}
 		
 		override public function update(): void
