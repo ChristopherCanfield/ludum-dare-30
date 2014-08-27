@@ -22,32 +22,32 @@ package com.divergentthoughtsgames.audio {
 		
 		private const sounds: Vector.<ManagedSound> = new Vector.<ManagedSound>();
 		
-		public function SoundManager(player: PlayerTopDown, level: FlxTilemap)
+		public function SoundManager(player: PlayerTopDown)
 		{
 			this.player = player;
 			
-			var oceanWaves: AmbientSound = new AmbientSound("Ocean Waves");
-			oceanWaves.soundInstance = FlxG.loadSound(Assets.audio.OceanWaves, 1.0, true, false, false);
-			oceanWaves.boundingBox = new Rectangle(0, 1745, level.width, level.height - 1745);
-			oceanWaves.fadeDistance = 100;
-			oceanWaves.maxPlays = TriggeredSound.UNLIMITED_PLAYS;
-			oceanWaves.maxVolume = 1.0;
-			sounds.push(oceanWaves);
-			
-			var churchBells: TriggeredSound = new TriggeredSound("Church Bells");
-			churchBells.soundInstance = FlxG.loadSound(Assets.audio.ChurchBells, 1.0, false, true, false);
-			churchBells.boundingBox = new Rectangle(0, 1500, level.width, 50);
-			churchBells.maxPlays = 1;
-			churchBells.maxVolume = 1.0;
-			sounds.push(churchBells);
-			
-			var outdoorNoise: AmbientSound = new AmbientSound("Outdoor Noise");
-			outdoorNoise.soundInstance = FlxG.loadSound(Assets.audio.AmbientOutdoorNoise, 1.0, true, false, false);
-			outdoorNoise.boundingBox = new Rectangle(0, 0, level.width, 2047);
-			outdoorNoise.fadeDistance = 100;;
-			outdoorNoise.maxPlays = TriggeredSound.UNLIMITED_PLAYS;
-			outdoorNoise.maxVolume = 1.0;
-			sounds.push(outdoorNoise);
+			//var oceanWaves: AmbientSound = new AmbientSound("Ocean Waves");
+			//oceanWaves.soundInstance = FlxG.loadSound(Assets.audio.OceanWaves, 1.0, true, false, false);
+			//oceanWaves.boundingBox = new Rectangle(0, 1745, FlxG.worldBounds.width, FlxG.worldBounds.height - 1745);
+			//oceanWaves.fadeDistance = 100;
+			//oceanWaves.maxPlays = TriggeredSound.UNLIMITED_PLAYS;
+			//oceanWaves.maxVolume = 1.0;
+			//sounds.push(oceanWaves);
+			//
+			//var churchBells: TriggeredSound = new TriggeredSound("Church Bells");
+			//churchBells.soundInstance = FlxG.loadSound(Assets.audio.ChurchBells, 1.0, false, true, false);
+			//churchBells.boundingBox = new Rectangle(0, 1500, level.width, 50);
+			//churchBells.maxPlays = 1;
+			//churchBells.maxVolume = 1.0;
+			//sounds.push(churchBells);
+			//
+			//var outdoorNoise: AmbientSound = new AmbientSound("Outdoor Noise");
+			//outdoorNoise.soundInstance = FlxG.loadSound(Assets.audio.AmbientOutdoorNoise, 1.0, true, false, false);
+			//outdoorNoise.boundingBox = new Rectangle(0, 0, level.width, 2047);
+			//outdoorNoise.fadeDistance = 100;;
+			//outdoorNoise.maxPlays = TriggeredSound.UNLIMITED_PLAYS;
+			//outdoorNoise.maxVolume = 1.0;
+			//sounds.push(outdoorNoise);
 		}
 		
 		override public function update(): void

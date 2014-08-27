@@ -46,11 +46,11 @@ package com.divergentthoughtsgames.topdown {
 		public static const NAME: String = "TopDownState";
 		
 		// The level's map.
-		private var level:FlxTilemap;
+		private var level: FlxGroup;
+		private var overworld: FlxSprite;
 		
 		// Entities.
 		private var player:PlayerTopDown;
-		private var ghosts:FlxGroup;
 		
 		// Sounds.
 		private var bulletHitSounds:Vector.<Class>;
@@ -84,10 +84,10 @@ package com.divergentthoughtsgames.topdown {
 			{
 				loadMap();
 			
-				var startX:int = 114;
-				var startY:int = 2316;
+				var startX:int = 1144;
+				var startY:int = 1185;
 				
-				player = new PlayerTopDown(this, level, startX, startY);
+				player = new PlayerTopDown(this, startX, startY);
 				add(player);
 				
 				addUsables();
@@ -97,11 +97,11 @@ package com.divergentthoughtsgames.topdown {
 			}
 			
 			FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
-			FlxG.camera.setBounds(0, 0, level.width, level.height);
-			FlxG.worldBounds = level.getBounds();
-			FlxG.worldBounds.width = level.width + 32;
+			FlxG.camera.setBounds(0, 0, overworld.width, overworld.height);
+			FlxG.worldBounds = new FlxRect(0, 0, overworld.width, overworld.height);
+			//FlxG.worldBounds.width = level.width + 32;
 			
-			addMinimap();
+			//addMinimap();
 			
 							// Add a play instructions.
 				//instructionsText = new FlxText(startX - 150, startY - 300, 300);
@@ -131,7 +131,7 @@ package com.divergentthoughtsgames.topdown {
 			livesText.antialiasing = true;
 			add(livesText);
 				
-			add(new SoundManager(player, level));
+			add(new SoundManager(player));
 			
 			//FlxG.camera.flash(0xffffffff, 1.5);
 			
@@ -161,37 +161,51 @@ package com.divergentthoughtsgames.topdown {
 		
 		private function addMinimap(): void
 		{
-			var minimap: FlxCamera = new FlxCamera(0, 0, level.width / 2, level.height / 2, 0.125);
+			var minimap: FlxCamera = new FlxCamera(0, 0, FlxG.worldBounds.width / 1.5, FlxG.worldBounds.height / 1.5, 0.1);
 			minimap.follow(player, FlxCamera.STYLE_LOCKON);
-			minimap.bounds = new FlxRect(0, 0, level.width, level.height);
+			minimap.bounds = new FlxRect(0, 0, FlxG.worldBounds.width, FlxG.worldBounds.height);
 			FlxG.addCamera(minimap);
 			
 			var minimapBorder: FlxSprite = new FlxSprite();
-			minimapBorder.makeGraphic(151, 151, 0xff000000);
+			minimapBorder.makeGraphic(100, 100, 0xff000000);
 			minimapBorder.scrollFactor.x = minimapBorder.scrollFactor.y = 0;
 			add(minimapBorder);
 		}
 		
 		private function loadMap(): void 
 		{
-			var xml:XML = new XML(new Assets.level.Level1Xml());
-			var tmx:TmxMap = new TmxMap(xml);
+			//var xml:XML = new XML(new Assets.level.Level1Xml());
+			//var tmx:TmxMap = new TmxMap(xml);
+			//
+			//var tileset:TmxTileSet = tmx.getTileSet('warcraft-tileset-2');
+			//var mapCsv:String = tmx.getLayer('map').toCsv(tileset);
+			//level = new FlxTilemap();
+			//level.loadMap(mapCsv, Assets.level.Level1Image, 32, 32, FlxTilemap.OFF, 0, 0, 155); // Formerly 196
+			//add(level);
 			
-			var tileset:TmxTileSet = tmx.getTileSet('warcraft-tileset-2');
-			var mapCsv:String = tmx.getLayer('map').toCsv(tileset);
-			level = new FlxTilemap();
-			level.loadMap(mapCsv, Assets.level.Level1Image, 32, 32, FlxTilemap.OFF, 0, 0, 155); // Formerly 196
-			add(level);
+			level = new FlxGroup();
 			
-			var scaleX:Number = FlxG.camera.getScale().x;
-			var scaleY:Number = FlxG.camera.getScale().y;
+			//var scaleX:Number = FlxG.camera.getScale().x;
+			//var scaleY:Number = FlxG.camera.getScale().y;
 			
 			// TODO: For testing - move to the correct area later.
-			var toastMan: FlxSprite = new FlxSprite(200, 1650, Assets.graphics.ToastMan);
-			add(toastMan);
+			//var toastMan: FlxSprite = new FlxSprite(200, 1650, Assets.graphics.ToastMan);
+			//add(toastMan);
 			
-			var town1: FlxSprite = new FlxSprite(200, 1800, Assets.graphics.Town1);
+			overworld = new FlxSprite(0, 0, Assets.graphics.Overworld);
+			add(overworld);
+			
+			//var pond: FlxSprite = new FlxSprite(0, 1754)
+			//pond.loadGraphic(Assets.graphics.Pond, true, false, overworld.width, overworld.height - 1754);
+			//pond.addAnimation("animation", [0, 1, 2], 8, true);
+			//pond.play("animation");
+			//add(pond);
+			
+			var town1: FlxSprite = new FlxSprite(910, 758, Assets.graphics.Town1);
 			add(town1);
+			
+			var town2: FlxSprite = new FlxSprite(350, 912, Assets.graphics.Town2);
+			add(town2);
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}

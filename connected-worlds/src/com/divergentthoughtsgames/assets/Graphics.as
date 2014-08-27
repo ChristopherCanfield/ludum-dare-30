@@ -12,6 +12,15 @@ package com.divergentthoughtsgames.assets
 		[Embed(source = '../../../../res/art/town1.png')]
 		public const Town1:Class;
 		
+		[Embed(source = '../../../../res/art/town2.png')]
+		public const Town2:Class;
+		
+		[Embed(source = '../../../../res/art/overworld.jpg')]
+		public const Overworld:Class;
+		
+		//[Embed(source = '../../../../res/art/pond.jpg')]
+		//public const Pond:Class;
+		
 		[Embed(source = '../../../../res/art/side-scroller-level-1/stick-man.png')]
 		public const StickMan: Class;
 		

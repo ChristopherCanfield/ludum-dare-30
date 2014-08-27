@@ -24,17 +24,15 @@ package com.divergentthoughtsgames.topdown {
 		private var startX:int;
 		private var startY:int;
 		
-		private var level:FlxTilemap;
 		private var gameState:FlxState;
 		
 		private var lives:int = 3;
 		
-		public function PlayerTopDown(gameState:FlxState, level:FlxTilemap, startX:int, startY:int) 
+		public function PlayerTopDown(gameState:FlxState, startX:int, startY:int) 
 		{
 			this.startX = startX;
 			this.startY = startY;
 			
-			this.level = level;
 			this.gameState = gameState;
 			
 			x = startX;
@@ -64,8 +62,8 @@ package com.divergentthoughtsgames.topdown {
 			
 			var minX:Number = 0;
 			var minY:Number = 0;
-			var maxX:Number = level.width - frameWidth;
-			var maxY:Number = level.height - frameHeight;
+			var maxX:Number = FlxG.worldBounds.width - frameWidth;
+			var maxY:Number = FlxG.worldBounds.height - frameHeight;
 			
 			processUserInput(minX, minY, maxX, maxY);
 			stayWithinBounds(minX, minY, maxX, maxY);
