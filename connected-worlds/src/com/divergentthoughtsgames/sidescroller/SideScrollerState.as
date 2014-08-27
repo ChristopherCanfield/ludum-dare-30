@@ -1,6 +1,5 @@
 package com.divergentthoughtsgames.sidescroller {
 	
-	import com.divergentthoughtsgames.assets.TopDownMap;
 	import exalted.input.XboxController;
 	import exalted.input.XboxInput;
 	import flash.geom.Rectangle;

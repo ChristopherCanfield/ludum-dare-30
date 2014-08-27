@@ -8,6 +8,5 @@ package com.divergentthoughtsgames.assets {
 	{
 		public static const audio:Audio = new Audio();
 		public static const graphics:Graphics = new Graphics();
-		public static const level:TopDownMap = new TopDownMap();
 	}
 }
