@@ -78,7 +78,7 @@ package org.flixel.system.debug
 		 */
 		override public function destroy():void
 		{
-			removeChild(_text);
+			if (_text) removeChild(_text);
 			_text = null;
 			_flixelUpdate = null;
 			_flixelDraw = null;
@@ -122,12 +122,10 @@ package org.flixel.system.debug
 					updateTime += _flixelUpdate[i++];
 				
 				var activeCount:uint = 0;
-				var te:uint = 0;
 				i = 0;
 				while(i < _objectMarker)
 				{
-					activeCount += _activeObject[i];
-					visibleCount += _visibleObject[i++];
+					activeCount += _activeObject[i++];
 				}
 				activeCount /= _objectMarker;
 				

@@ -133,7 +133,8 @@ package org.flixel.system
 		
 		private function goToMyURL(event:MouseEvent=null):void
 		{
-			navigateToURL(new URLRequest("http://"+myURL));
+			var prefix:String = myURL.match(/^https?:/) ? "" : "http://";
+			navigateToURL(new URLRequest(prefix+myURL));
 		}
 		
 		private function onEnterFrame(event:Event):void
@@ -236,7 +237,8 @@ package org.flixel.system
 		
 		protected function destroy():void
 		{
-			removeChild(_buffer);
+			if (_buffer != null)
+				removeChild(_buffer);
 			_buffer = null;
 			_bmpBar = null;
 			_text = null;

@@ -116,8 +116,8 @@ package org.flixel.system
 			setLayout(FlxG.DEBUGGER_STANDARD);
 			
 			//Should help with fake mouse focus type behavior
-			addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
-			addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+			addEventListener(MouseEvent.MOUSE_OVER,handleMouseOver);
+			addEventListener(MouseEvent.MOUSE_OUT,handleMouseOut);
 		}
 		
 		/**
@@ -126,24 +126,44 @@ package org.flixel.system
 		public function destroy():void
 		{
 			_screen = null;
-			removeChild(log);
-			log.destroy();
-			log = null;
-			removeChild(watch);
-			watch.destroy();
-			watch = null;
-			removeChild(perf);
-			perf.destroy();
-			perf = null;
-			removeChild(vcr);
-			vcr.destroy();
-			vcr = null;
-			removeChild(vis);
-			vis.destroy();
-			vis = null;
 			
-			removeEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
-			removeEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+			if (log != null)
+			{
+				removeChild(log);
+				log.destroy();
+				log = null;
+			}
+			
+			if (watch != null)
+			{
+				removeChild(watch);
+				watch.destroy();
+				watch = null;
+			}
+			
+			if (perf != null)
+			{
+				removeChild(perf);
+				perf.destroy();
+				perf = null;
+			}
+			
+			if (vcr != null)
+			{
+				removeChild(vcr);
+				vcr.destroy();
+				vcr = null;
+			}
+			
+			if (vis != null)
+			{
+				removeChild(vis);
+				vis.destroy();
+				vis = null;
+			}
+			
+			removeEventListener(MouseEvent.MOUSE_OVER,handleMouseOver);
+			removeEventListener(MouseEvent.MOUSE_OUT,handleMouseOut);
 		}
 		
 		/**
@@ -151,7 +171,7 @@ package org.flixel.system
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseOver(E:MouseEvent=null):void
+		protected function handleMouseOver(E:MouseEvent=null):void
 		{
 			hasMouse = true;
 		}
@@ -161,7 +181,7 @@ package org.flixel.system
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseOut(E:MouseEvent=null):void
+		protected function handleMouseOut(E:MouseEvent=null):void
 		{
 			hasMouse = false;
 		}

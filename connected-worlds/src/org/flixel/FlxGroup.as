@@ -47,6 +47,10 @@ package org.flixel
 		 * Helper for sort.
 		 */
 		protected var _sortOrder:int;
+		/**
+		 * Helper for sort.
+		 */
+		protected var _sortCheckIndexExistence:Boolean;
 
 		/**
 		 * Constructor
@@ -81,6 +85,7 @@ package org.flixel
 				members = null;
 			}
 			_sortIndex = null;
+			super.destroy();
 		}
 		
 		/**
@@ -142,18 +147,14 @@ package org.flixel
 				_marker = 0;
 			if((_maxSize == 0) || (members == null) || (_maxSize >= members.length))
 				return;
-			
+	
 			//If the max size has shrunk, we need to get rid of some objects
-			var basic:FlxBasic;
-			var i:uint = _maxSize;
-			var l:uint = members.length;
-			while(i < l)
+			while(members.length > _maxSize)
 			{
-				basic = members[i++] as FlxBasic;
-				if(basic != null)
-					basic.destroy();
+				var basic:FlxBasic = members.pop() as FlxBasic;
+				if(basic != null) basic.destroy();
 			}
-			length = members.length = _maxSize;
+			length = members.length;
 		}
 		
 		/**
@@ -165,15 +166,21 @@ package org.flixel
 		 * <p>WARNING: If the group has a maxSize that has already been met,
 		 * the object will NOT be added to the group!</p>
 		 *
-		 * @param	Object		The object you want to add to the group.
+		 * @param	TargetObject		The object you want to add to the group.
 		 *
 		 * @return	The same <code>FlxBasic</code> object that was passed in.
 		 */
-		public function add(Object:FlxBasic):FlxBasic
+		public function add(TargetObject:FlxBasic):FlxBasic
 		{
+			if (TargetObject == null)
+			{
+				FlxG.log("WARNING: Cannot add a `null` object to a FlxGroup.");
+				return null;
+			}
+		
 			//Don't bother adding an object twice.
-			if(members.indexOf(Object) >= 0)
-				return Object;
+			if(members.indexOf(TargetObject) >= 0)
+				return TargetObject;
 			
 			//First, look for a null entry where we can add the object.
 			var i:uint = 0;
@@ -182,10 +189,10 @@ package org.flixel
 			{
 				if(members[i] == null)
 				{
-					members[i] = Object;
+					members[i] = TargetObject;
 					if(i >= length)
 						length = i+1;
-					return Object;
+					return TargetObject;
 				}
 				i++;
 			}
@@ -194,7 +201,7 @@ package org.flixel
 			if(_maxSize > 0)
 			{
 				if(members.length >= _maxSize)
-					return Object;
+					return TargetObject;
 				else if(members.length * 2 <= _maxSize)
 					members.length *= 2;
 				else
@@ -205,9 +212,9 @@ package org.flixel
 			
 			//If we made it this far, then we successfully grew the group,
 			//and we can go ahead and add the object at the first open slot.
-			members[i] = Object;
+			members[i] = TargetObject;
 			length = i+1;
-			return Object;
+			return TargetObject;
 		}
 		
 		/**
@@ -266,14 +273,14 @@ package org.flixel
 		/**
 		 * Removes an object from the group.
 		 * 
-		 * @param	Object	The <code>FlxBasic</code> you want to remove.
+		 * @param	TargetObject	The <code>FlxBasic</code> you want to remove.
 		 * @param	Splice	Whether the object should be cut from the array entirely or not.
 		 * 
 		 * @return	The removed object.
 		 */
-		public function remove(Object:FlxBasic,Splice:Boolean=false):FlxBasic
+		public function remove(TargetObject:FlxBasic,Splice:Boolean=false):FlxBasic
 		{
-			var index:int = members.indexOf(Object);
+			var index:int = members.indexOf(TargetObject);
 			if((index < 0) || (index >= members.length))
 				return null;
 			if(Splice)
@@ -283,7 +290,7 @@ package org.flixel
 			}
 			else
 				members[index] = null;
-			return Object;
+			return TargetObject;
 		}
 		
 		/**
@@ -309,14 +316,19 @@ package org.flixel
 		 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
 		 * <code>FlxState.update()</code> override.  To sort all existing objects after
 		 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
+		 * If you are sure every object in the group has the sorting property you want to sort on, then you
+		 * might call <code>sort()</code> passing <code>false</code> as the third parameter which disables
+		 * the index existence check, boosting the sorting performance.
 		 * 
 		 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
-		 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
+		 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.
+		 * @param	CheckIndexExistence	Whether the method should check if group members have the sorting property you want to sort on. Members without the sorting property are always placed at the end of the group after the sort, in no particular order. Checking the index existence prevents the method from throwing an exception in case it encounters an object without the sorting property, but it causes a huge performance penalty. Default value is <code>true</code>. 
 		 */
-		public function sort(Index:String="y",Order:int=ASCENDING):void
+		public function sort(Index:String="y",Order:int=ASCENDING,CheckIndexExistence:Boolean=true):void
 		{
 			_sortIndex = Index;
 			_sortOrder = Order;
+			_sortCheckIndexExistence = CheckIndexExistence;
 			members.sort(sortHandler);
 		}
 
@@ -397,7 +409,6 @@ package org.flixel
 		 */
 		public function getFirstNull():int
 		{
-			var basic:FlxBasic;
 			var i:uint = 0;
 			var l:uint = members.length;
 			while(i < l)
@@ -552,7 +563,18 @@ package org.flixel
 				if((basic != null) && basic.exists)
 					basic.kill();
 			}
+			
+			// Kill the group itself
 			super.kill();
+		}
+		
+		/**
+		 * Calls revive on the group object. <i>Note: Does not revive any of the members!</i>
+		 */
+		override public function revive():void
+		{
+			// Revive the group itself
+			super.revive();
 		}
 		
 		/**
@@ -565,6 +587,14 @@ package org.flixel
 		 */
 		protected function sortHandler(Obj1:FlxBasic,Obj2:FlxBasic):int
 		{
+			if (_sortCheckIndexExistence == true)
+			{
+				// If the sorting property is missing, place the object at the end of the list.
+				if(!Obj1 || !(_sortIndex in Obj1))
+					return 1;
+				else if(!Obj2 || !(_sortIndex in Obj2))
+					return -1;
+			}
 			if(Obj1[_sortIndex] < Obj2[_sortIndex])
 				return _sortOrder;
 			else if(Obj1[_sortIndex] > Obj2[_sortIndex])

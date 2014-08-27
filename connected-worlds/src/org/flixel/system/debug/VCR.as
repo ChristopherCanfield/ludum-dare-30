@@ -1,7 +1,6 @@
 package org.flixel.system.debug
 {
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -14,9 +13,6 @@ package org.flixel.system.debug
 	
 	import org.flixel.FlxG;
 	import org.flixel.FlxU;
-	import org.flixel.system.FlxReplay;
-	import org.flixel.system.replay.FrameRecord;
-	import org.flixel.system.replay.MouseRecord;
 	
 	/**
 	 * This class contains the record, stop, play, and step 1 frame buttons seen on the top edge of the debugger overlay.
@@ -150,28 +146,31 @@ package org.flixel.system.debug
 		{
 			_file = null;
 			
-			removeChild(_open);
+			if (_open) removeChild(_open);
 			_open = null;
-			removeChild(_recordOff);
+			if (_recordOff) removeChild(_recordOff);
 			_recordOff = null;
-			removeChild(_recordOn);
+			if (_recordOn) removeChild(_recordOn);
 			_recordOn = null;
-			removeChild(_stop);
+			if (_stop) removeChild(_stop);
 			_stop = null;
-			removeChild(_flixel);
+			if (_flixel) removeChild(_flixel);
 			_flixel = null;
-			removeChild(_restart);
+			if (_restart) removeChild(_restart);
 			_restart = null;
-			removeChild(_pause);
+			if (_pause) removeChild(_pause);
 			_pause = null;
-			removeChild(_play);
+			if (_play) removeChild(_play);
 			_play = null;
-			removeChild(_step);
+			if (_step) removeChild(_step);
 			_step = null;
 			
-			parent.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
-			parent.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			parent.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			if (parent)
+			{
+				parent.removeEventListener(MouseEvent.MOUSE_MOVE,handleMouseMove);
+				parent.removeEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown);
+				parent.removeEventListener(MouseEvent.MOUSE_UP,handleMouseUp);
+			}
 		}
 		
 		/**
@@ -445,9 +444,9 @@ package org.flixel.system.debug
 				return;
 			removeEventListener(Event.ENTER_FRAME,init);
 
-			parent.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
-			parent.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			parent.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			parent.addEventListener(MouseEvent.MOUSE_MOVE,handleMouseMove);
+			parent.addEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown);
+			parent.addEventListener(MouseEvent.MOUSE_UP,handleMouseUp);
 		}
 		
 		/**
@@ -455,7 +454,7 @@ package org.flixel.system.debug
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseMove(E:MouseEvent=null):void
+		protected function handleMouseMove(E:MouseEvent=null):void
 		{
 			if(!checkOver())
 				unpress();
@@ -467,7 +466,7 @@ package org.flixel.system.debug
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseDown(E:MouseEvent=null):void
+		protected function handleMouseDown(E:MouseEvent=null):void
 		{
 			unpress();
 			if(_overOpen)
@@ -488,7 +487,7 @@ package org.flixel.system.debug
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseUp(E:MouseEvent=null):void
+		protected function handleMouseUp(E:MouseEvent=null):void
 		{
 			if(_overOpen && _pressingOpen)
 				onOpen();

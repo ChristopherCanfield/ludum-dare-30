@@ -65,6 +65,10 @@ package org.flixel
 		 */
 		protected var _transform:SoundTransform;
 		/**
+		 * Internal tracker for whether the sound is paused or not (not the same as stopped).
+		 */
+		protected var _paused:Boolean;
+		/**
 		 * Internal tracker for the position in runtime of the music playback.
 		 */
 		protected var _position:Number;
@@ -93,25 +97,13 @@ package org.flixel
 		 */
 		protected var _pan:Boolean;
 		/**
-		 * Internal timer used to keep track of requests to fade out the sound playback.
+		 * Internal helper for fading sounds.
 		 */
-		protected var _fadeOutTimer:Number;
+		protected var _fade:FlxTween;
 		/**
-		 * Internal helper for fading out sounds.
+		 * Internal flag for what to do when the sound is done fading out.
 		 */
-		protected var _fadeOutTotal:Number;
-		/**
-		 * Internal flag for whether to pause or stop the sound when it's done fading out.
-		 */
-		protected var _pauseOnFadeOut:Boolean;
-		/**
-		 * Internal timer for fading in the sound playback.
-		 */
-		protected var _fadeInTimer:Number;
-		/**
-		 * Internal helper for fading in sounds.
-		 */
-		protected var _fadeInTotal:Number;
+		protected var _onFadeComplete:Function;
 		
 		/**
 		 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -119,42 +111,38 @@ package org.flixel
 		public function FlxSound()
 		{
 			super();
-			createSound();
+			reset();
 		}
 		
 		/**
 		 * An internal function for clearing all the variables used by sounds.
 		 */
-		protected function createSound():void
+		protected function reset():void
 		{
 			destroy();
+			
 			x = 0;
 			y = 0;
-			if(_transform == null)
-				_transform = new SoundTransform();
-			_transform.pan = 0;
-			_sound = null;
+			
 			_position = 0;
+			_paused = false;
 			_volume = 1.0;
 			_volumeAdjust = 1.0;
 			_looped = false;
 			_target = null;
 			_radius = 0;
 			_pan = false;
-			_fadeOutTimer = 0;
-			_fadeOutTotal = 0;
-			_pauseOnFadeOut = false;
-			_fadeInTimer = 0;
-			_fadeInTotal = 0;
-			exists = false;
-			active = false;
+			_fade = null;
+			_onFadeComplete = null;
 			visible = false;
-			name = null;
-			artist = null;
 			amplitude = 0;
 			amplitudeLeft = 0;
 			amplitudeRight = 0;
 			autoDestroy = false;
+			
+			if(_transform == null)
+				_transform = new SoundTransform();
+			_transform.pan = 0;
 		}
 		
 		/**
@@ -162,14 +150,25 @@ package org.flixel
 		 */
 		override public function destroy():void
 		{
-			kill();
-
 			_transform = null;
-			_sound = null;
-			_channel = null;
+			exists = false;
+			active = false;
 			_target = null;
 			name = null;
 			artist = null;
+			
+			if (_channel)
+			{
+				_channel.removeEventListener(Event.SOUND_COMPLETE,stopped);
+				_channel.stop();
+				_channel = null;
+			}
+			
+			if (_sound)
+			{
+				_sound.removeEventListener(Event.ID3, gotID3);
+				_sound = null;
+			}
 			
 			super.destroy();
 		}
@@ -179,22 +178,26 @@ package org.flixel
 		 */
 		override public function update():void
 		{
-			if(_position != 0)
+			if(!playing)
 				return;
 			
-			var radial:Number = 1.0;
-			var fade:Number = 1.0;
+			_position = _channel.position;
+			
+			var radialMultiplier:Number = 1.0;
+			var fadeMultiplier:Number = 1.0;
 			
 			//Distance-based volume control
 			if(_target != null)
 			{
-				radial = FlxU.getDistance(new FlxPoint(_target.x,_target.y),new FlxPoint(x,y))/_radius;
-				if(radial < 0) radial = 0;
-				if(radial > 1) radial = 1;
+				radialMultiplier = FlxU.getDistance(new FlxPoint(_target.x,_target.y),new FlxPoint(x,y))/_radius;
+				if(radialMultiplier < 0) radialMultiplier = 0;
+				if(radialMultiplier > 1) radialMultiplier = 1;
+				
+				radialMultiplier = 1 - radialMultiplier;
 				
 				if(_pan)
 				{
-					var d:Number = (_target.x-x)/_radius;
+					var d:Number = (x-_target.x)/_radius;
 					if(d < -1) d = -1;
 					else if(d > 1) d = 1;
 					_transform.pan = d;
@@ -202,43 +205,39 @@ package org.flixel
 			}
 			
 			//Cross-fading volume control
-			if(_fadeOutTimer > 0)
+			if(_fade)
 			{
-				_fadeOutTimer -= FlxG.elapsed;
-				if(_fadeOutTimer <= 0)
+				_fade.progress += FlxG.elapsed;
+				fadeMultiplier = _fade.value;
+				
+				if (_fade.finished)
 				{
-					if(_pauseOnFadeOut)
-						pause();
-					else
-						stop();
+					_fade = null;
+					if (_onFadeComplete != null) { _onFadeComplete.call(); }
 				}
-				fade = _fadeOutTimer/_fadeOutTotal;
-				if(fade < 0) fade = 0;
-			}
-			else if(_fadeInTimer > 0)
-			{
-				_fadeInTimer -= FlxG.elapsed;
-				fade = _fadeInTimer/_fadeInTotal;
-				if(fade < 0) fade = 0;
-				fade = 1 - fade;
 			}
 			
-			_volumeAdjust = radial*fade;
+			_volumeAdjust = radialMultiplier*fadeMultiplier;
 			updateTransform();
 			
-			if((_transform.volume > 0) && (_channel != null))
+			if(_transform.volume > 0)
 			{
 				amplitudeLeft = _channel.leftPeak/_transform.volume;
 				amplitudeRight = _channel.rightPeak/_transform.volume;
 				amplitude = (amplitudeLeft+amplitudeRight)*0.5;
 			}
+			else
+			{
+				amplitudeLeft = 0;
+				amplitudeRight = 0;
+				amplitude = 0;			
+			}			
 		}
 		
 		override public function kill():void
 		{
 			super.kill();
-			if(_channel != null)
-				stop();
+			cleanup(false);
 		}
 		
 		/**
@@ -252,11 +251,12 @@ package org.flixel
 		 */
 		public function loadEmbedded(EmbeddedSound:Class, Looped:Boolean=false, AutoDestroy:Boolean=false):FlxSound
 		{
-			stop();
-			createSound();
+			cleanup(true);
+			
 			_sound = new EmbeddedSound();
 			//NOTE: can't pull ID3 info from embedded sound currently
 			_looped = Looped;
+			autoDestroy = AutoDestroy;
 			updateTransform();
 			exists = true;
 			return this;
@@ -273,12 +273,13 @@ package org.flixel
 		 */
 		public function loadStream(SoundURL:String, Looped:Boolean=false, AutoDestroy:Boolean=false):FlxSound
 		{
-			stop();
-			createSound();
+			cleanup(true);
+			
 			_sound = new Sound();
 			_sound.addEventListener(Event.ID3, gotID3);
 			_sound.load(new URLRequest(SoundURL));
 			_looped = Looped;
+			autoDestroy = AutoDestroy;
 			updateTransform();
 			exists = true;
 			return this;
@@ -290,17 +291,17 @@ package org.flixel
 		 * 
 		 * @param	X		The X position of the sound.
 		 * @param	Y		The Y position of the sound.
-		 * @param	Object	The object you want to track.
+		 * @param	TargetObject	The object you want to track.
 		 * @param	Radius	The maximum distance this sound can travel.
 		 * @param	Pan		Whether the sound should pan in addition to the volume changes (default: true).
 		 * 
 		 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 		 */
-		public function proximity(X:Number,Y:Number,Object:FlxObject,Radius:Number,Pan:Boolean=true):FlxSound
+		public function proximity(X:Number,Y:Number,TargetObject:FlxObject,Radius:Number,Pan:Boolean=true):FlxSound
 		{
 			x = X;
 			y = Y;
-			_target = Object;
+			_target = TargetObject;
 			_radius = Radius;
 			_pan = Pan;
 			return this;
@@ -313,79 +314,31 @@ package org.flixel
 		 */
 		public function play(ForceRestart:Boolean=false):void
 		{
-			if(_position < 0)
+			if(!exists)
 				return;
+		
 			if(ForceRestart)
 			{
-				var oldAutoDestroy:Boolean = autoDestroy;
-				autoDestroy = false;
-				stop();
-				autoDestroy = oldAutoDestroy;
-			}
-			if(_looped)
+				cleanup(false, true, true);
+			} 
+			else if(playing)
 			{
-				if(_position == 0)
-				{
-					if(_channel == null)
-						_channel = _sound.play(0,9999,_transform);
-					if(_channel == null)
-						exists = false;
-				}
-				else
-				{
-					_channel = _sound.play(_position,0,_transform);
-					if(_channel == null)
-						exists = false;
-					else
-						_channel.addEventListener(Event.SOUND_COMPLETE, looped);
-				}
+				return;
 			}
+			
+			if (_paused)
+				resume();
 			else
-			{
-				if(_position == 0)
-				{
-					if(_channel == null)
-					{
-						_channel = _sound.play(0,0,_transform);
-						if(_channel == null)
-							exists = false;
-						else
-							_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
-					}
-				}
-				else
-				{
-					_channel = _sound.play(_position,0,_transform);
-					if(_channel == null)
-						exists = false;
-				}
-			}
-			active = (_channel != null);
-			_position = 0;
+				startSound(0);
 		}
 		
 		/**
-		 * Unpause a sound.  Only works on sounds that have been paused.
+		 * Unpause a sound. Only works on sounds that have been paused.
 		 */
 		public function resume():void
 		{
-			if(_position <= 0)
-				return;
-			if(_looped)
-			{
-				_channel = _sound.play(_position,0,_transform);
-				if(_channel == null)
-					exists = false;
-				else
-					_channel.addEventListener(Event.SOUND_COMPLETE, looped);
-			}
-			else
-			{
-				_channel = _sound.play(_position,0,_transform);
-				if(_channel == null)
-					exists = false;
-			}
-			active = (_channel != null);
+			if (_paused)
+				startSound(_position);
 		}
 		
 		/**
@@ -393,22 +346,12 @@ package org.flixel
 		 */
 		public function pause():void
 		{
-			if(_channel == null)
-			{
-				_position = -1;
+			if(!playing)
 				return;
-			}
+			
 			_position = _channel.position;
-			_channel.stop();
-			if(_looped)
-			{
-				while(_position >= _sound.length)
-					_position -= _sound.length;
-			}
-			if(_position <= 0)
-				_position = 1;
-			_channel = null;
-			active = false;
+			_paused = true;
+			cleanup(false, false, false);
 		}
 		
 		/**
@@ -416,12 +359,7 @@ package org.flixel
 		 */
 		public function stop():void
 		{
-			_position = 0;
-			if(_channel != null)
-			{
-				_channel.stop();
-				stopped();
-			}
+			cleanup(autoDestroy, true, true);
 		}
 		
 		/**
@@ -432,10 +370,12 @@ package org.flixel
 		 */
 		public function fadeOut(Seconds:Number,PauseInstead:Boolean=false):void
 		{
-			_pauseOnFadeOut = PauseInstead;
-			_fadeInTimer = 0;
-			_fadeOutTimer = Seconds;
-			_fadeOutTotal = _fadeOutTimer;
+			if (!playing)
+				{ return; }
+			
+			var fadeStartVolume:Number = (_fade ? _fade.value : 1);
+			_fade = new FlxTween(fadeStartVolume, 0, Seconds);
+			_onFadeComplete = (PauseInstead ? pause : stop);
 		}
 		
 		/**
@@ -446,10 +386,22 @@ package org.flixel
 		 */
 		public function fadeIn(Seconds:Number):void
 		{
-			_fadeOutTimer = 0;
-			_fadeInTimer = Seconds;
-			_fadeInTotal = _fadeInTimer;
+			if (playing && (!_fade))
+				{ return; }
+		
+			var fadeStartVolume:Number = (_fade ? _fade.value : 0);
+			_fade = new FlxTween(fadeStartVolume, 1, Seconds);
+			_onFadeComplete = null;
+			
 			play();
+		}
+		
+		/**
+		 * Whether or not the sound is currently playing.
+		 */
+		public function get playing():Boolean
+		{
+			return (_channel != null);
 		}
 		
 		/**
@@ -494,34 +446,81 @@ package org.flixel
 		}
 		
 		/**
-		 * An internal helper function used to help Flash resume playing a looped sound.
-		 * 
-		 * @param	event		An <code>Event</code> object.
+		 * An internal helper function used to attempt to start playing the sound and populate the <code>_channel</code> variable.
 		 */
-		protected function looped(event:Event=null):void
+		protected function startSound(Position:Number):void
 		{
-		    if (_channel == null)
-		    	return;
-	        _channel.removeEventListener(Event.SOUND_COMPLETE,looped);
-	        _channel = null;
-			play();
+			// See https://github.com/FlixelCommunity/flixel/issues/120
+			var numLoops:int = (_looped && (Position == 0)) ? 9999 : 0;
+			
+			_position = Position;
+			_paused = false;
+			_channel = _sound.play(_position, numLoops, _transform);
+			if(_channel != null)
+			{
+				_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
+				active = true;
+			}
+			else
+			{
+				exists = false;
+				active = false;
+			}
 		}
-
+		
 		/**
-		 * An internal helper function used to help Flash clean up and re-use finished sounds.
+		 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
 		 * 
 		 * @param	event		An <code>Event</code> object.
 		 */
 		protected function stopped(event:Event=null):void
 		{
-			if(!_looped)
-	        	_channel.removeEventListener(Event.SOUND_COMPLETE,stopped);
-	        else
-	        	_channel.removeEventListener(Event.SOUND_COMPLETE,looped);
-	        _channel = null;
+			if (_looped)
+			{
+				cleanup(false);
+				play();	
+			}
+			else
+			{
+				cleanup(autoDestroy);
+			}
+		}
+		
+		/**
+		 * An internal helper function used to help Flash clean up (and potentially re-use) finished sounds. Will stop the current sound and destroy the associated <code>SoundChannel</code>, plus, any other commands ordered by the passed in parameters.
+		 * 
+		 * @param	destroySound		Whether or not to destroy the sound. If this is true, the position and fading will be reset as well.
+		 * @param	resetPosition		Whether or not to reset the position of the sound.
+		 * @param	resetFading		Whether or not to reset the current fading variables of the sound.
+		 */
+		protected function cleanup(destroySound:Boolean, resetPosition:Boolean = true, resetFading:Boolean = true):void
+		{
+			if (destroySound)
+			{
+				reset();
+				return;
+			}
+		
+			if (_channel)
+			{
+				_channel.removeEventListener(Event.SOUND_COMPLETE,stopped);
+				_channel.stop();
+				_channel = null;
+			}
+			
 			active = false;
-			if(autoDestroy)
-				destroy();
+			
+			if (resetPosition)
+			{
+				_position = 0;
+				_paused = false;
+			}
+			
+			if (resetFading)
+			{
+				_fade = null;
+				_onFadeComplete = null;
+			}
 		}
 		
 		/**
@@ -532,10 +531,8 @@ package org.flixel
 		protected function gotID3(event:Event=null):void
 		{
 			FlxG.log("got ID3 info!");
-			if(_sound.id3.songName.length > 0)
-				name = _sound.id3.songName;
-			if(_sound.id3.artist.length > 0)
-				artist = _sound.id3.artist;
+			name = _sound.id3.songName;
+			artist = _sound.id3.artist;
 			_sound.removeEventListener(Event.ID3, gotID3);
 		}
 	}

@@ -7,13 +7,11 @@ package org.flixel
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.*;
-	import flash.geom.Point;
 	import flash.text.AntiAliasType;
 	import flash.text.GridFitType;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Mouse;
-	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
 	import org.flixel.plugin.TimerManager;
@@ -181,7 +179,7 @@ package org.flixel
 			_focus = new Sprite();
 			_focus.visible = false;
 			_soundTray = new Sprite();
-			_mouse = new Sprite()
+			_mouse = new Sprite();
 			
 			//basic display and update setup stuff
 			FlxG.init(this,GameSizeX,GameSizeY,Zoom);
@@ -239,7 +237,7 @@ package org.flixel
 		 * 
 		 * @param	FlashEvent	Flash keyboard event.
 		 */
-		protected function onKeyUp(FlashEvent:KeyboardEvent):void
+		protected function handleKeyUp(FlashEvent:KeyboardEvent):void
 		{
 			if(_debuggerUp && _debugger.watch.editing)
 				return;
@@ -259,7 +257,7 @@ package org.flixel
 				if(useSoundHotKeys)
 				{
 					var c:int = FlashEvent.keyCode;
-					var code:String = String.fromCharCode(FlashEvent.charCode);
+					//var code:String = String.fromCharCode(FlashEvent.charCode);
 					switch(c)
 					{
 						case 48:
@@ -296,13 +294,12 @@ package org.flixel
 		 * 
 		 * @param	FlashEvent	Flash keyboard event.
 		 */
-		protected function onKeyDown(FlashEvent:KeyboardEvent):void
+		protected function handleKeyDown(FlashEvent:KeyboardEvent):void
 		{
 			if(_debuggerUp && _debugger.watch.editing)
 				return;
 			if(_replaying && (_replayCancelKeys != null) && (_debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
 			{
-				var cancel:Boolean = false;
 				var replayCancelKey:String;
 				var i:uint = 0;
 				var l:uint = _replayCancelKeys.length;
@@ -331,7 +328,7 @@ package org.flixel
 		 * 
 		 * @param	FlashEvent	Flash mouse event.
 		 */
-		protected function onMouseDown(FlashEvent:MouseEvent):void
+		protected function handleMouseDown(FlashEvent:MouseEvent):void
 		{
 			if(_debuggerUp)
 			{
@@ -370,7 +367,7 @@ package org.flixel
 		 * 
 		 * @param	FlashEvent	Flash mouse event.
 		 */
-		protected function onMouseUp(FlashEvent:MouseEvent):void
+		protected function handleMouseUp(FlashEvent:MouseEvent):void
 		{
 			if((_debuggerUp && _debugger.hasMouse) || _replaying)
 				return;
@@ -382,7 +379,7 @@ package org.flixel
 		 * 
 		 * @param	FlashEvent	Flash mouse event.
 		 */
-		protected function onMouseWheel(FlashEvent:MouseEvent):void
+		protected function handleMouseWheel(FlashEvent:MouseEvent):void
 		{
 			if((_debuggerUp && _debugger.hasMouse) || _replaying)
 				return;
@@ -671,11 +668,11 @@ package org.flixel
             stage.frameRate = _flashFramerate;
 			
 			//Add basic input event listeners and mouse container
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, handleMouseWheel);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addChild(_mouse);
 			
 			//Let mobile devs opt out of unnecessary overlays.
@@ -750,9 +747,9 @@ package org.flixel
 			if(soundPrefs.bind("flixel") && (soundPrefs.data.sound != null))
 			{
 				if(soundPrefs.data.sound.volume != null)
-					FlxG.volume = soundPrefs.data.sound.volume;
+					FlxG.volume = Number(soundPrefs.data.sound.volume);
 				if(soundPrefs.data.sound.mute != null)
-					FlxG.mute = soundPrefs.data.sound.mute;
+					FlxG.mute = Boolean(soundPrefs.data.sound.mute);
 				soundPrefs.destroy();
 			}
 		}

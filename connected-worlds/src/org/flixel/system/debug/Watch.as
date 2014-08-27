@@ -2,10 +2,7 @@ package org.flixel.system.debug
 {
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
 	
-	import org.flixel.FlxU;
 	import org.flixel.system.FlxWindow;
 	
 	/**
@@ -65,15 +62,20 @@ package org.flixel.system.debug
 		 */
 		override public function destroy():void
 		{
-			removeChild(_names);
+			if (_names) removeChild(_names);
 			_names = null;
-			removeChild(_values);
+			if (_values) removeChild(_values);
 			_values = null;
-			var i:int = 0;
-			var l:uint = _watching.length;
-			while(i < l)
-				(_watching[i++] as WatchEntry).destroy();
-			_watching = null;
+			
+			if (_watching != null)
+			{
+				var i:int = 0;
+				var l:uint = _watching.length;
+				while(i < l)
+					(_watching[i++] as WatchEntry).destroy();
+				_watching = null;
+			}
+			
 			super.destroy();
 		}
 
@@ -155,7 +157,7 @@ package org.flixel.system.debug
 				_names.removeChild(watchEntry.nameDisplay);
 				_values.removeChild(watchEntry.valueDisplay);
 				watchEntry.destroy();
-				i++
+				i++;
 			}
 			_watching.length = 0;
 		}

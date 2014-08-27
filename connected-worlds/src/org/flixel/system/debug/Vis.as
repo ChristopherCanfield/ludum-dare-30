@@ -29,8 +29,6 @@ package org.flixel.system.debug
 		{
 			super();
 			
-			var spacing:uint = 7;
-			
 			_bounds = new ImgBounds();
 			addChild(_bounds);
 			
@@ -46,12 +44,15 @@ package org.flixel.system.debug
 		 */
 		public function destroy():void
 		{
-			removeChild(_bounds);
+			if (_bounds) removeChild(_bounds);
 			_bounds = null;
 			
-			parent.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
-			parent.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			parent.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			if (parent)
+			{
+				parent.removeEventListener(MouseEvent.MOUSE_MOVE,handleMouseMove);
+				parent.removeEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown);
+				parent.removeEventListener(MouseEvent.MOUSE_UP,handleMouseUp);
+			}
 		}
 		
 		//***ACTUAL BUTTON BEHAVIORS***//
@@ -77,9 +78,9 @@ package org.flixel.system.debug
 				return;
 			removeEventListener(Event.ENTER_FRAME,init);
 			
-			parent.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
-			parent.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			parent.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			parent.addEventListener(MouseEvent.MOUSE_MOVE,handleMouseMove);
+			parent.addEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown);
+			parent.addEventListener(MouseEvent.MOUSE_UP,handleMouseUp);
 		}
 		
 		/**
@@ -87,7 +88,7 @@ package org.flixel.system.debug
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseMove(E:MouseEvent=null):void
+		protected function handleMouseMove(E:MouseEvent=null):void
 		{
 			if(!checkOver())
 				unpress();
@@ -99,7 +100,7 @@ package org.flixel.system.debug
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseDown(E:MouseEvent=null):void
+		protected function handleMouseDown(E:MouseEvent=null):void
 		{
 			unpress();
 			if(_overBounds)
@@ -112,7 +113,7 @@ package org.flixel.system.debug
 		 * 
 		 * @param	E	Flash mouse event.
 		 */
-		protected function onMouseUp(E:MouseEvent=null):void
+		protected function handleMouseUp(E:MouseEvent=null):void
 		{
 			if(_overBounds && _pressingBounds)
 				onBounds();

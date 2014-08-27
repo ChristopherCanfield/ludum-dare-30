@@ -257,20 +257,20 @@ package org.flixel.plugin.photonstorm
 		 * @param	x
 		 * @param	y
 		 * @param	target
-		 * @return	reference to the fired bullet.
+		 * @return	true if a bullet was fired or false if one wasn't available. The bullet last fired is stored in FlxWeapon.prevBullet
 		 */
-		protected function runFire(method:uint, x:int = 0, y:int = 0, target:FlxSprite = null, angle:int = 0): Bullet
+		private function runFire(method:uint, x:int = 0, y:int = 0, target:FlxSprite = null, angle:int = 0):Boolean
 		{
 			if (fireRate > 0 && (getTimer() < nextFire))
 			{
-				return null;
+				return false;
 			}
 			
 			currentBullet = getFreeBullet();
 			
 			if (currentBullet == null)
 			{
-				return null;
+				return false;
 			}
 
 			if (onPreFireCallback is Function)
@@ -347,7 +347,7 @@ package org.flixel.plugin.photonstorm
 			
 			bulletsFired++;
 			
-			return currentBullet;
+			return true;
 		}
 		
 		/**
@@ -355,7 +355,7 @@ package org.flixel.plugin.photonstorm
 		 * 
 		 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 		 */
-		public function fire(): Bullet
+		public function fire():Boolean
 		{
 			return runFire(FIRE);
 		}
@@ -365,7 +365,7 @@ package org.flixel.plugin.photonstorm
 		 * 
 		 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 		 */
-		public function fireAtMouse(): Bullet
+		public function fireAtMouse():Boolean
 		{
 			return runFire(FIRE_AT_MOUSE);
 		}
@@ -377,7 +377,7 @@ package org.flixel.plugin.photonstorm
 		 * @param	y	The y coordinate (in game world pixels) to fire at
 		 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 		 */
-		public function fireAtPosition(x:int, y:int): Bullet
+		public function fireAtPosition(x:int, y:int):Boolean
 		{
 			return runFire(FIRE_AT_POSITION, x, y);
 		}
@@ -388,7 +388,7 @@ package org.flixel.plugin.photonstorm
 		 * @param	target	The FlxSprite you wish to fire the bullet at
 		 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 		 */
-		public function fireAtTarget(target:FlxSprite): Bullet
+		public function fireAtTarget(target:FlxSprite):Boolean
 		{
 			return runFire(FIRE_AT_TARGET, 0, 0, target);
 		}
@@ -399,7 +399,7 @@ package org.flixel.plugin.photonstorm
 		 * @param	angle	The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
 		 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 		 */
-		public function fireFromAngle(angle:int): Bullet
+		public function fireFromAngle(angle:int):Boolean
 		{
 			return runFire(FIRE_FROM_ANGLE, 0, 0, null, angle);
 		}
@@ -409,7 +409,7 @@ package org.flixel.plugin.photonstorm
 		 * 
 		 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 		 */
-		public function fireFromParentAngle(): Bullet
+		public function fireFromParentAngle():Boolean
 		{
 			return runFire(FIRE_FROM_PARENT_ANGLE);
 		}
@@ -675,8 +675,18 @@ package org.flixel.plugin.photonstorm
 			onPostFireSound = sound;
 		}
 		
-		public function update(): void
+		// TODO
+		public function TODOcreateBulletPattern(pattern:Array):void
 		{
+			//	Launches this many bullets
 		}
+		
+		
+		public function update():void
+		{
+			// ???
+		}
+		
 	}
+
 }

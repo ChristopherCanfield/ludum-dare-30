@@ -1,9 +1,6 @@
 package org.flixel
 {
 	import flash.display.Graphics;
-	import flash.display.Sprite;
-	import flash.geom.Point;
-	
 	import org.flixel.FlxBasic;
 	
 	/**
@@ -195,8 +192,8 @@ package org.flixel
 		protected var _rect:FlxRect;
 		/**
 		 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
-		 * FlxObject and FlxSprite default to true.
-		 * FlxText, FlxTileblock, FlxTilemap and FlxSound default to false.
+		 * FlxObject, FlxSprite and FlxText default to true.
+		 * FlxTileblock and FlxTilemap default to false.
 		 */
 		public var moves:Boolean;
 		/**
@@ -254,11 +251,9 @@ package org.flixel
 		 */
 		protected var _pathInc:int;
 		/**
-		 * Internal flag for whether hte object's angle should be adjusted to the path angle during path follow behavior.
+		 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 		 */
 		protected var _pathRotate:Boolean;
-		
-		public var userData: Object;
 		
 		/**
 		 * Instantiates a <code>FlxObject</code>.
@@ -277,6 +272,8 @@ package org.flixel
 			height = Height;
 			mass = 1.0;
 			elasticity = 0.0;
+			
+			health = 1;
 
 			immovable = false;
 			moves = true;
@@ -327,6 +324,7 @@ package org.flixel
 			if(path != null)
 				path.destroy();
 			path = null;
+			super.destroy();
 		}
 		
 		/**
@@ -339,16 +337,13 @@ package org.flixel
 		{
 			_ACTIVECOUNT++;
 			
-			if(_flickerTimer != 0)
+			if(_flickerTimer > 0)
 			{
-				if(_flickerTimer > 0)
+				_flickerTimer -= FlxG.elapsed;
+				if(_flickerTimer <= 0)
 				{
-					_flickerTimer = _flickerTimer - FlxG.elapsed;
-					if(_flickerTimer <= 0)
-					{
-						_flickerTimer = 0;
-						_flicker = false;
-					}
+					_flickerTimer = 0;
+					_flicker = false;
 				}
 			}
 			
@@ -511,6 +506,9 @@ package org.flixel
 		public function stopFollowingPath(DestroyPath:Boolean=false):void
 		{
 			pathSpeed = 0;
+			velocity.x = 0;
+			velocity.y = 0;
+			
 			if(DestroyPath && (path != null))
 			{
 				path.destroy();
@@ -544,7 +542,7 @@ package org.flixel
 				if(_pathNodeIndex < 0)
 				{
 					_pathNodeIndex = 0;
-					pathSpeed = 0;
+					stopFollowingPath(false);
 				}
 			}
 			else if((_pathMode & PATH_LOOP_FORWARD) > 0)
@@ -588,7 +586,7 @@ package org.flixel
 				if(_pathNodeIndex >= path.nodes.length)
 				{
 					_pathNodeIndex = path.nodes.length-1;
-					pathSpeed = 0;
+					stopFollowingPath(false);
 				}
 			}
 
@@ -688,11 +686,16 @@ package org.flixel
 			{
 				var results:Boolean = false;
 				var i:uint = 0;
-				var members:Array = (ObjectOrGroup as FlxGroup).members;
+				var group:FlxGroup = ObjectOrGroup as FlxGroup; 
+				var members:Array = group.members;
+				var length:uint = group.length;
 				while(i < length)
 				{
-					if(overlaps(members[i++],InScreenSpace,Camera))
+					var basic:FlxBasic = members[i++] as FlxBasic;
+					if (basic != null && basic.exists && overlaps(basic,InScreenSpace,Camera))
+					{
 						results = true;
+					}
 				}
 				return results;
 			}
@@ -737,13 +740,17 @@ package org.flixel
 			if(ObjectOrGroup is FlxGroup)
 			{
 				var results:Boolean = false;
-				var basic:FlxBasic;
 				var i:uint = 0;
-				var members:Array = (ObjectOrGroup as FlxGroup).members;
+				var group:FlxGroup = ObjectOrGroup as FlxGroup; 
+				var members:Array = group.members;
+				var length:uint = group.length;
 				while(i < length)
 				{
-					if(overlapsAt(X,Y,members[i++],InScreenSpace,Camera))
+					var basic:FlxBasic = members[i++] as FlxBasic;
+					if(basic != null && basic.exists && overlapsAt(X,Y,basic,InScreenSpace,Camera))
+					{
 						results = true;
+					}
 				}
 				return results;
 			}

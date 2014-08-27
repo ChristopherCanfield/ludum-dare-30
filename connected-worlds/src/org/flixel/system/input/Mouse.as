@@ -7,8 +7,6 @@ package org.flixel.system.input
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxU;
 	import org.flixel.system.replay.MouseRecord;
 	
 	/**
@@ -67,6 +65,8 @@ package org.flixel.system.input
 		{
 			super();
 			_cursorContainer = CursorContainer;
+			_cursorContainer.mouseChildren = false;
+			_cursorContainer.mouseEnabled = false;
 			_lastX = screenX = 0;
 			_lastY = screenY = 0;
 			_lastWheel = wheel = 0;
@@ -157,7 +157,7 @@ package org.flixel.system.input
 					load();
 				else
 				{
-					_cursorContainer.removeChild(_cursor)
+					_cursorContainer.removeChild(_cursor);
 					_cursor = null;
 				}
 			}
