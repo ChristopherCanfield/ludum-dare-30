@@ -6,6 +6,8 @@ package com.divergentthoughtsgames.topdown {
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
+	import org.flixel.plugin.photonstorm.FlxSpecialFX;
+	import org.flixel.plugin.photonstorm.FX.SineWaveFX;
 	
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxParticle;
@@ -206,6 +208,8 @@ package com.divergentthoughtsgames.topdown {
 			
 			var town2: FlxSprite = new FlxSprite(350, 912, Assets.graphics.Town2);
 			add(town2);
+			
+			
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}
