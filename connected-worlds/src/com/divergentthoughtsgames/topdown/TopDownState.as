@@ -98,13 +98,6 @@ package com.divergentthoughtsgames.topdown {
 			
 			//addMinimap();
 			
-			// Add a label for the score.
-			timeRemainingText = new FlxText(2, 2, 80);
-			timeRemainingText.scrollFactor.x = timeRemainingText.scrollFactor.y = 0;
-			timeRemainingText.shadow = 0xff000000;
-			timeRemainingText.text = "Time: " + Math.round(timeRemaining);
-			add(timeRemainingText);
-			
 			// Add a label for the lives.
 			livesText = new FlxText(FlxG.width / FlxG.camera.getScale().x - 45,  4, 45);
 			livesText.scale = FlxG.camera.getScale();
@@ -120,6 +113,9 @@ package com.divergentthoughtsgames.topdown {
 			// Add the variable editor window. Remove this for release builds.
 			//var variableEditorWindow:VariableEditorWindow = new VariableEditorWindow();
 			//debugConfig = variableEditorWindow.create(player);
+			
+			FlxG.debug = true;
+			FlxG.visualDebug = true;
 			
 			previouslyLoaded = true;
         }
@@ -162,9 +158,18 @@ package com.divergentthoughtsgames.topdown {
 			//add(pond);
 			
 			var town1: FlxSprite = new FlxSprite(910, 758, Assets.graphics.Town1);
+			town1.immovable = true;
+			town1.width = 1368 - 912;
+			town1.height = 205;
+			town1.offset.x = 10;
+			town1.offset.y = 5;
+			
+			level.add(town1);
 			add(town1);
 			
 			var town2: FlxSprite = new FlxSprite(350, 912, Assets.graphics.Town2);
+			level.add(town2);
+			town2.immovable = true;
 			add(town2);
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
@@ -186,15 +191,12 @@ package com.divergentthoughtsgames.topdown {
 				return;
 			}
 			
+			player.savePosition();
 			super.update();
 			
 			// Process collisions.
-			FlxG.collide(level, player);
-			
-			timeRemaining -= FlxG.elapsed;
-			timeRemainingText.text = "Time: " + Math.round(timeRemaining);
-			gameOver = ((timeRemaining <= 0) ? true : 
-					(player.getLives() == 0) ? true : false);
+			FlxG.overlap(player, level, onLevelCollide, null);
+
 			if (gameOver)
 			{
 				onGameOver();
@@ -213,6 +215,18 @@ package com.divergentthoughtsgames.topdown {
 				currentDialog.destroy();
 				remove(currentDialog);
 			}
+		}
+		
+		private function onLevelCollide(player: PlayerTopDown, sprite2: FlxSprite): Boolean
+		{
+			if (FlxCollision.pixelPerfectCheck(player, sprite2, 50))
+			{
+				player.x = player.previousX;
+				player.y = player.previousY;
+				player.velocity.x = player.velocity.y = 0;
+				trace("Colliding");
+			}
+			return false;
 		}
 		
 		public override function destroy(): void

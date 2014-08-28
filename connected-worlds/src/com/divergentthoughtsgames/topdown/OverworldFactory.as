@@ -6,7 +6,7 @@ package com.divergentthoughtsgames.topdown
 	 */
 	public class OverworldFactory 
 	{
-		public static function create(): void
+		public static function create(topDownState: TopDownState): void
 		{
 			
 		}

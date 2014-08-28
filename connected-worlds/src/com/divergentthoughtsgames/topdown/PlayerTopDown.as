@@ -21,6 +21,9 @@ package com.divergentthoughtsgames.topdown {
 	 */
 	public class PlayerTopDown extends FlxSprite
 	{		
+		public var previousX: Number;
+		public var previousY: Number;
+		
 		private var startX:int;
 		private var startY:int;
 		
@@ -50,6 +53,12 @@ package com.divergentthoughtsgames.topdown {
 		public function getLives(): int
 		{
 			return lives;
+		}
+		
+		public function savePosition(): void
+		{
+			previousX = x;
+			previousY = y;
 		}
 	
 		override public function update():void
