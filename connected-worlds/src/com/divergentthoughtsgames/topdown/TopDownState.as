@@ -192,6 +192,31 @@ package com.divergentthoughtsgames.topdown {
 			level.add(town2BoundingBox4);
 			add(town2BoundingBox4);
 			
+			var water1: FlxObject = new FlxObject(0, 1776, 332, 63);
+			water1.immovable = true;
+			level.add(water1);
+			add(water1);
+			
+			var water2: FlxObject = new FlxObject(335, 1763, 1171, 113);
+			water2.immovable = true;
+			level.add(water2);
+			add(water2);
+			
+			var water3: FlxObject = new FlxObject(1508, 1816, 143, 106);
+			water3.immovable = true;
+			level.add(water3);
+			add(water3);
+			
+			var water4: FlxObject = new FlxObject(1650, 1853, 366, 68);
+			water4.immovable = true;
+			level.add(water4);
+			add(water4);
+			
+			var water5: FlxObject = new FlxObject(1180, 1740, 210, 50);
+			water5.immovable = true;
+			level.add(water5);
+			add(water5);
+			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}
 		
@@ -200,8 +225,8 @@ package com.divergentthoughtsgames.topdown {
 			usableManager = new UsableManager(player);
 			add(usableManager);
 			
-			var cave: StateSwitchTrigger = new StateSwitchTrigger("Cave", new Rectangle(0, 2252, 110, 140), new SideScrollerState());
-			usableManager.add(cave);
+			//var cave: StateSwitchTrigger = new StateSwitchTrigger("Cave", new Rectangle(0, 2252, 110, 140), new SideScrollerState());
+			//usableManager.add(cave);
 		}
 		
 		override public function update(): void
