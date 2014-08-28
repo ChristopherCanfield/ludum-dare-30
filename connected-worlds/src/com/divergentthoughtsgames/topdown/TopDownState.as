@@ -62,12 +62,6 @@ package com.divergentthoughtsgames.topdown {
 		private var timeRemainingText:FlxText;
 		private var livesText:FlxText;
 		
-		private var instructionsText:FlxText;
-		
-		// The number of seconds per level.
-		private const LEVEL_TIME:Number = 999;
-		private var timeRemaining:Number = LEVEL_TIME;
-		
 		private var gameOver:Boolean = false;
 		
 		private var debugConfig:MinimalConfigurator;
@@ -101,22 +95,8 @@ package com.divergentthoughtsgames.topdown {
 			FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 			FlxG.camera.setBounds(0, 0, overworld.width, overworld.height);
 			FlxG.worldBounds = new FlxRect(0, 0, overworld.width, overworld.height);
-			//FlxG.worldBounds.width = level.width + 32;
 			
 			//addMinimap();
-			
-							// Add a play instructions.
-				//instructionsText = new FlxText(startX - 150, startY - 300, 300);
-				//instructionsText.size = 15;
-				//instructionsText.text = "WASD or Arrow Keys to move Mouse click or spacebar to shoot";
-				//instructionsText.shadow = 0xff000000;
-				//add(instructionsText);
-			
-			//ghosts = new FlxGroup(3);
-			//ghosts.add(new Ghost(this, level, startX - 100, startY - 100, player));
-			//ghosts.add(new Ghost(this, level, startX + 100, startY, player));
-			//ghosts.add(new Ghost(this, level, startX, startY + 100, player));
-			//add(ghosts);
 			
 			// Add a label for the score.
 			timeRemainingText = new FlxText(2, 2, 80);
@@ -138,8 +118,8 @@ package com.divergentthoughtsgames.topdown {
 			//FlxG.camera.flash(0xffffffff, 1.5);
 			
 			// Add the variable editor window. Remove this for release builds.
-			var variableEditorWindow:VariableEditorWindow = new VariableEditorWindow();
-			debugConfig = variableEditorWindow.create(player);
+			//var variableEditorWindow:VariableEditorWindow = new VariableEditorWindow();
+			//debugConfig = variableEditorWindow.create(player);
 			
 			previouslyLoaded = true;
         }
@@ -150,15 +130,6 @@ package com.divergentthoughtsgames.topdown {
 			dialogBox.setPosition(FlxG.width / 2 - dialogBox.width / 2, 100);
 			add(dialogBox);
 			currentDialog = dialogBox;
-		}
-		
-		public function removeInstructions(): void
-		{
-			if (instructionsText != null)
-			{
-				remove(instructionsText, true);
-				instructionsText = null;
-			}
 		}
 		
 		private function addMinimap(): void
@@ -176,23 +147,10 @@ package com.divergentthoughtsgames.topdown {
 		
 		private function loadMap(): void 
 		{
-			//var xml:XML = new XML(new Assets.level.Level1Xml());
-			//var tmx:TmxMap = new TmxMap(xml);
-			//
-			//var tileset:TmxTileSet = tmx.getTileSet('warcraft-tileset-2');
-			//var mapCsv:String = tmx.getLayer('map').toCsv(tileset);
-			//level = new FlxTilemap();
-			//level.loadMap(mapCsv, Assets.level.Level1Image, 32, 32, FlxTilemap.OFF, 0, 0, 155); // Formerly 196
-			//add(level);
-			
 			level = new FlxGroup();
 			
 			//var scaleX:Number = FlxG.camera.getScale().x;
 			//var scaleY:Number = FlxG.camera.getScale().y;
-			
-			// TODO: For testing - move to the correct area later.
-			//var toastMan: FlxSprite = new FlxSprite(200, 1650, Assets.graphics.ToastMan);
-			//add(toastMan);
 			
 			overworld = new FlxSprite(0, 0, Assets.graphics.Overworld);
 			add(overworld);
@@ -208,8 +166,6 @@ package com.divergentthoughtsgames.topdown {
 			
 			var town2: FlxSprite = new FlxSprite(350, 912, Assets.graphics.Town2);
 			add(town2);
-			
-			
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}
