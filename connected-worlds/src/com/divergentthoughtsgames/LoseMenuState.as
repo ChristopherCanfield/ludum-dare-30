@@ -1,8 +1,6 @@
 package com.divergentthoughtsgames {
-	import org.flixel.FlxState;
-	import org.flixel.FlxButton;
-	import org.flixel.FlxG;
-	import org.flixel.FlxText;
+	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 	
 	import com.divergentthoughtsgames.App;
 	import com.divergentthoughtsgames.topdown.TopDownState;

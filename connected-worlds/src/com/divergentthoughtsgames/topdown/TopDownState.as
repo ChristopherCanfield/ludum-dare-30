@@ -1,44 +1,18 @@
 package com.divergentthoughtsgames.topdown {
 	
-	import com.divergentthoughtsgames.assets.SideScrollerLevel1;
-	import flash.display3D.textures.RectangleTexture;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.utils.getTimer;
-	import mx.core.FlexSprite;
-	import org.flixel.plugin.photonstorm.FlxSpecialFX;
-	import org.flixel.plugin.photonstorm.FX.SineWaveFX;
+	import com.bit101.utils.MinimalConfigurator;
 	
-	import org.flixel.FlxGroup;
-	import org.flixel.FlxParticle;
-	import org.flixel.FlxSound;
-	import org.flixel.plugin.photonstorm.FlxDelay;
-	import org.flixel.FlxRect;
-	import org.flixel.FlxState;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxText;
-	import org.flixel.FlxTilemap;
-	import org.flixel.FlxG;
-	import org.flixel.FlxObject;
-	import org.flixel.FlxCamera;
-	import org.flixel.FlxEmitter;
-	import org.flixel.plugin.photonstorm.FlxMath;
-	import org.flixel.plugin.photonstorm.FlxCollision;
-	import org.flixel.plugin.photonstorm.BaseTypes.Bullet;
-		
+	import com.divergentthoughtsgames.*;
+	import com.divergentthoughtsgames.assets.Assets;
+	import com.divergentthoughtsgames.audio.SoundManager;
+	import com.divergentthoughtsgames.sidescroller.SideScrollerState;
+	import com.divergentthoughtsgames.topdown.PlayerTopDown;
+	
 	import net.pixelpracht.tmx.*;
 	
-	import com.bit101.utils.MinimalConfigurator;
-	import com.bit101.components.Component;
-	import com.bit101.components.InputText;
+	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 	
-	import com.divergentthoughtsgames.assets.Assets;
-	import com.divergentthoughtsgames.VariableEditorWindow;
-	import com.divergentthoughtsgames.topdown.PlayerTopDown;
-	import com.divergentthoughtsgames.*;
-	import com.divergentthoughtsgames.sidescroller.SideScrollerState;
-	import com.divergentthoughtsgames.audio.SoundManager;
 	
 	/**
 	 * ...
@@ -116,7 +90,7 @@ package com.divergentthoughtsgames.topdown {
 			//debugConfig = variableEditorWindow.create(player);
 			
 			FlxG.debug = true;
-			FlxG.visualDebug = true;
+			//FlxG.visualDebug = true;
 			
 			previouslyLoaded = true;
         }

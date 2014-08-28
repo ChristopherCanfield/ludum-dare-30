@@ -1,34 +1,20 @@
 package com.divergentthoughtsgames.sidescroller {
 	
-	import exalted.input.XboxController;
-	import exalted.input.XboxInput;
-	import flash.geom.Rectangle;
-	import org.flixel.FlxRect;
-	import org.flixel.plugin.photonstorm.FlxCollision;
-	
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	
-	import org.flixel.FlxGroup;
-	import org.flixel.FlxState;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxText;
-	import org.flixel.FlxTilemap;
-	import org.flixel.FlxG;
-	import org.flixel.FlxObject;
-	import org.flixel.FlxCamera;
-	
-	import net.pixelpracht.tmx.*;
-	
-	import com.bit101.components.InputText;
 	import com.bit101.utils.MinimalConfigurator;
-	import com.bit101.components.Component;
 	
 	import com.divergentthoughtsgames.*;
 	import com.divergentthoughtsgames.assets.*;
 	import com.divergentthoughtsgames.topdown.TopDownState;
 	
+	import exalted.input.XboxController;
+	import exalted.input.XboxInput;
 	
+	import net.pixelpracht.tmx.*;
+	
+	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
+	
+
 	/**
 	 * ...
 	 * @author Christopher D. Canfield

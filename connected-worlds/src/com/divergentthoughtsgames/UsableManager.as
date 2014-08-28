@@ -1,6 +1,7 @@
 package com.divergentthoughtsgames 
 {
 	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 	
 	/**
 	 * ...

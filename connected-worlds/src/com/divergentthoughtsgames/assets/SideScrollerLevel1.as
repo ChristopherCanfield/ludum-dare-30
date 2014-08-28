@@ -1,10 +1,7 @@
 package com.divergentthoughtsgames.assets {
-	import flash.geom.Rectangle;
-	import flash.text.engine.SpaceJustifier;
-	import org.flixel.FlxRect;
-	import org.flixel.FlxSave;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxState;
+	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
+	
 	/**
 	 * ...
 	 * @author Christopher D. Canfield

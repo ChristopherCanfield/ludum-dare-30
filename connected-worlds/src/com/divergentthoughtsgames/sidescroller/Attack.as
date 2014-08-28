@@ -2,10 +2,8 @@ package com.divergentthoughtsgames.sidescroller
 {
 	import flash.geom.Point;
 	
-	import org.flixel.FlxGroup;
-	import org.flixel.FlxObject;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxG;
+	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 	
 	/**
 	 * ...
