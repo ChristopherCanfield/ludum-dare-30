@@ -6,6 +6,7 @@ package com.divergentthoughtsgames.topdown {
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
+	import mx.core.FlexSprite;
 	import org.flixel.plugin.photonstorm.FlxSpecialFX;
 	import org.flixel.plugin.photonstorm.FX.SineWaveFX;
 	
@@ -170,7 +171,26 @@ package com.divergentthoughtsgames.topdown {
 			var town2: FlxSprite = new FlxSprite(350, 912, Assets.graphics.Town2);
 			level.add(town2);
 			town2.immovable = true;
+			//town2.width = 433;
+			town2.width = 338;
+			town2.height = 500
+			town2.offset.y = 5;
 			add(town2);
+			
+			var town2BoundingBox2: FlxObject = new FlxObject(400, 1011, 340, 255);
+			town2BoundingBox2.immovable = true;
+			level.add(town2BoundingBox2);
+			add(town2BoundingBox2);
+			
+			var town2BoundingBox3: FlxObject = new FlxObject(650, 1055, 150, 100);
+			town2BoundingBox3.immovable = true;
+			level.add(town2BoundingBox3);
+			add(town2BoundingBox3);
+			
+			var town2BoundingBox4: FlxObject = new FlxObject(675, 915, 110, 240);
+			town2BoundingBox4.immovable = true;
+			level.add(town2BoundingBox4);
+			add(town2BoundingBox4);
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}
@@ -217,14 +237,21 @@ package com.divergentthoughtsgames.topdown {
 			}
 		}
 		
-		private function onLevelCollide(player: PlayerTopDown, sprite2: FlxSprite): Boolean
+		private function onLevelCollide(player: PlayerTopDown, object2: FlxObject): Boolean
 		{
-			if (FlxCollision.pixelPerfectCheck(player, sprite2, 50))
+			if (object2 is FlxSprite)
 			{
-				player.x = player.previousX;
-				player.y = player.previousY;
-				player.velocity.x = player.velocity.y = 0;
-				trace("Colliding");
+				var sprite: FlxSprite = object2 as FlxSprite; 
+				if (FlxCollision.pixelPerfectCheck(player, sprite))
+				{
+					player.x = player.previousX;
+					player.y = player.previousY;
+					player.velocity.x = player.velocity.y = 0;
+				}
+			}
+			else
+			{
+				FlxObject.separate(player, object2);
 			}
 			return false;
 		}
