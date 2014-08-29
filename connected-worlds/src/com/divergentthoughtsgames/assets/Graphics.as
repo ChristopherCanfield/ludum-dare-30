@@ -18,8 +18,16 @@ package com.divergentthoughtsgames.assets
 		[Embed(source = '../../../../res/art/overworld.jpg')]
 		public const Overworld:Class;
 		
-		//[Embed(source = '../../../../res/art/pond.jpg')]
-		//public const Pond:Class;
+		// Main Character
+		
+		[Embed(source = '../../../../res/art/sheriff1.png')]
+		public const SheriffProfile:Class;
+		
+		[Embed(source = '../../../../res/art/horse front.png')]
+		public const HorseFront:Class;
+		
+		
+		// Other characters
 		
 		[Embed(source = '../../../../res/art/side-scroller-level-1/stick-man.png')]
 		public const StickMan: Class;
@@ -32,7 +40,9 @@ package com.divergentthoughtsgames.assets
 		
 		[Embed(source = '../../../../res/art/penguin.png')]
 		public const Penguin: Class;
-				
+		
+		// Dialogs
+		
 		[Embed(source = '../../../../res/art/text-box.png')]
 		public const TextBox: Class;
 		

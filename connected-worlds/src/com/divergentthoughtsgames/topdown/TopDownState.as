@@ -191,6 +191,9 @@ package com.divergentthoughtsgames.topdown {
 			level.add(water5);
 			add(water5);
 			
+			var horse: FlxSprite = new FlxSprite(1400, 845, Assets.graphics.HorseFront);
+			add(horse);
+			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
 		}
 		
