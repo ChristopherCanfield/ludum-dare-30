@@ -6,9 +6,6 @@ package com.divergentthoughtsgames.assets
 	 */
 	public class Graphics 
 	{
-		[Embed(source = '../../../../res/art/zelda-chickens.png')]
-		public const Chickens:Class;
-		
 		[Embed(source = '../../../../res/art/town1.png')]
 		public const Town1:Class;
 		

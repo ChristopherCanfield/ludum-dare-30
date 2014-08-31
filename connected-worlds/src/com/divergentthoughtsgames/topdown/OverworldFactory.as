@@ -11,6 +11,25 @@ package com.divergentthoughtsgames.topdown
 			
 		}
 		
+		private static function loadMap(topDownState: TopDownState): void
+		{
+			
+		}
+		
+		private static function loadMapObjects(topDownState: TopDownState): void
+		{
+			
+		}
+		
+		private static function loadCharacters(topDownState: TopDownState): void
+		{
+			
+		}
+		
+		private static function addUsables(topDownState: TopDownState): void
+		{
+			
+		}
 	}
 
 }

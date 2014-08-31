@@ -35,7 +35,7 @@ package com.divergentthoughtsgames.topdown {
 			drag.x = maxVelocity.x * 4;
 			drag.y = maxVelocity.y * 4;
 			
-			var image:FlxSprite = loadGraphic(Assets.graphics.SheriffProfile, true, true, 70, 119);
+			var image:FlxSprite = loadGraphic(Assets.graphics.SheriffProfile, true, true, 59, 100);
 			addAnimation("walk", [0, 1, 2], 12, true);
 			addAnimation("stop", [0], 0);
 			play("stop");

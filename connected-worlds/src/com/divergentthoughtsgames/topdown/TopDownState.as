@@ -90,7 +90,7 @@ package com.divergentthoughtsgames.topdown {
 			//debugConfig = variableEditorWindow.create(player);
 			
 			FlxG.debug = true;
-			//FlxG.visualDebug = true;
+			FlxG.visualDebug = true;
 			
 			previouslyLoaded = true;
         }
@@ -134,8 +134,8 @@ package com.divergentthoughtsgames.topdown {
 			
 			var town1: FlxSprite = new FlxSprite(910, 758, Assets.graphics.Town1);
 			town1.immovable = true;
-			town1.width = 1368 - 912;
-			town1.height = 205;
+			town1.width = 500;
+			town1.height = 150;
 			town1.offset.x = 10;
 			town1.offset.y = 5;
 			
@@ -145,23 +145,22 @@ package com.divergentthoughtsgames.topdown {
 			var town2: FlxSprite = new FlxSprite(350, 912, Assets.graphics.Town2);
 			level.add(town2);
 			town2.immovable = true;
-			//town2.width = 433;
 			town2.width = 338;
-			town2.height = 500
+			town2.height = 440
 			town2.offset.y = 5;
 			add(town2);
 			
-			var town2BoundingBox2: FlxObject = new FlxObject(400, 1011, 340, 255);
+			var town2BoundingBox2: FlxObject = new FlxObject(500, 1011, 220, 215);
 			town2BoundingBox2.immovable = true;
 			level.add(town2BoundingBox2);
 			add(town2BoundingBox2);
 			
-			var town2BoundingBox3: FlxObject = new FlxObject(650, 1055, 150, 100);
+			var town2BoundingBox3: FlxObject = new FlxObject(650, 1055, 100, 100);
 			town2BoundingBox3.immovable = true;
 			level.add(town2BoundingBox3);
 			add(town2BoundingBox3);
 			
-			var town2BoundingBox4: FlxObject = new FlxObject(675, 915, 110, 240);
+			var town2BoundingBox4: FlxObject = new FlxObject(675, 915, 110, 200);
 			town2BoundingBox4.immovable = true;
 			level.add(town2BoundingBox4);
 			add(town2BoundingBox4);
@@ -191,7 +190,7 @@ package com.divergentthoughtsgames.topdown {
 			level.add(water5);
 			add(water5);
 			
-			var horse: FlxSprite = new FlxSprite(1400, 845, Assets.graphics.HorseFront);
+			var horse: FlxSprite = new FlxSprite(1425, 868, Assets.graphics.HorseFront);
 			add(horse);
 			
 			//FlxG.camera.setBounds(0, 0, level.width * scaleX - 410, level.height * scaleY - 460, true);
