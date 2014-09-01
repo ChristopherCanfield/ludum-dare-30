@@ -3,7 +3,7 @@ package com.divergentthoughtsgames {
 	import org.flixel.plugin.photonstorm.*;
 	
 	import com.divergentthoughtsgames.topdown.*;
-	import com.divergentthoughtsgames.sidescroller.*;
+	import com.divergentthoughtsgames.beatemup.*;
 	
 	/**
 	 * ...
@@ -20,7 +20,7 @@ package com.divergentthoughtsgames {
 		
 		public static function initialize(): void
 		{
-			App.gameStates[SideScrollerState.NAME] = new SideScrollerState();
+			App.gameStates[BeatEmUpState.NAME] = new BeatEmUpState();
 			App.gameStates[TopDownState.NAME] = new TopDownState();
 			
 			FlxG.debug = true;

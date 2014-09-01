@@ -5,7 +5,7 @@ package com.divergentthoughtsgames.topdown {
 	import com.divergentthoughtsgames.*;
 	import com.divergentthoughtsgames.assets.Assets;
 	import com.divergentthoughtsgames.audio.SoundManager;
-	import com.divergentthoughtsgames.sidescroller.SideScrollerState;
+	import com.divergentthoughtsgames.beatemup.BeatEmUpState;
 	import com.divergentthoughtsgames.topdown.PlayerTopDown;
 	
 	import net.pixelpracht.tmx.*;
@@ -228,7 +228,7 @@ package com.divergentthoughtsgames.topdown {
 			// Debugging: Switch between states.
 			if (FlxG.keys.ESCAPE && FlxG.debug)
 			{
-				FlxG.switchState(App.gameStates[SideScrollerState.NAME]);
+				FlxG.switchState(App.gameStates[BeatEmUpState.NAME]);
 			}
 			
 			if (FlxG.keys.E && currentDialog != null)

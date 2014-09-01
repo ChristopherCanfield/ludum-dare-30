@@ -1,5 +1,4 @@
-package com.divergentthoughtsgames.sidescroller 
-{
+package com.divergentthoughtsgames.beatemup {
 	import flash.geom.Point;
 	
 	import org.flixel.*;
