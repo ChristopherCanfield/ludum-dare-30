@@ -1,0 +1,7 @@
+Title: playbill
+Size: ?
+Color: 7A5230
+
+Text: Leander
+Size: 20
+Color: 2F2F2F

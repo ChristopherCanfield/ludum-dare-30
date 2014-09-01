@@ -71,6 +71,10 @@ package com.divergentthoughtsgames.topdown {
 			FlxG.camera.setBounds(0, 0, overworld.width, overworld.height);
 			FlxG.worldBounds = new FlxRect(0, 0, overworld.width, overworld.height);
 			
+			var oldWestBox: FlxSprite = new FlxSprite(300, 200, Assets.graphics.OldWestTextBox);
+			oldWestBox.scrollFactor.x = oldWestBox.scrollFactor.y = 0;
+			add(oldWestBox);
+			
 			//addMinimap();
 			
 			// Add a label for the lives.

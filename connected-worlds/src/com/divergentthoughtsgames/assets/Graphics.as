@@ -38,7 +38,7 @@ package com.divergentthoughtsgames.assets
 		[Embed(source = '../../../../res/art/penguin.png')]
 		public const Penguin: Class;
 		
-		// Dialogs
+		// Type 1 Dialogs
 		
 		[Embed(source = '../../../../res/art/text-box.png')]
 		public const TextBox: Class;
@@ -48,5 +48,10 @@ package com.divergentthoughtsgames.assets
 		
 		[Embed(source = '../../../../res/art/quest-1-dialog-2.png')]
 		public const Quest1Dialog2: Class;
+		
+		// Type 2 Dialogs
+		
+		[Embed(source = '../../../../res/art/old-west-text-box.png')]
+		public const OldWestTextBox: Class;
 	}
 }
